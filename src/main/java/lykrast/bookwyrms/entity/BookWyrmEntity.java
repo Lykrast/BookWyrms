@@ -76,7 +76,7 @@ public class BookWyrmEntity extends Animal {
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 12).add(Attributes.MOVEMENT_SPEED, 0.26);
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 12).add(Attributes.MOVEMENT_SPEED, 0.25);
 	}
 
 	@Override
@@ -291,10 +291,20 @@ public class BookWyrmEntity extends Animal {
 		compound.putInt("ToDigest", toDigest);
 		compound.putInt("DigestTimer", digestTimer);
 	}
+	
+	private static final ResourceLocation[] LOOT_TABLES = {
+			BookWyrms.rl("entities/book_wyrm_grey"),
+			BookWyrms.rl("entities/book_wyrm_red"),
+			BookWyrms.rl("entities/book_wyrm_orange"),
+			BookWyrms.rl("entities/book_wyrm_green"),
+			BookWyrms.rl("entities/book_wyrm_blue"),
+			BookWyrms.rl("entities/book_wyrm_teal"),
+			BookWyrms.rl("entities/book_wyrm_purple")
+	};
 
 	@Override
 	protected ResourceLocation getDefaultLootTable() {
-		return BookWyrms.rl("entities/book_wyrm");
+		return LOOT_TABLES[getWyrmType()];
 	}
 
 	@Override

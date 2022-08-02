@@ -2,6 +2,14 @@
 	"item.bookwyrms.book_wyrm_raw": "Raw Book Wyrm",
 	"item.bookwyrms.book_wyrm_cooked": "Cooked Book Wyrm",
 	
+	"item.bookwyrms.scale_grey": "Grey Book Wyrm Scale",
+	"item.bookwyrms.scale_red": "Red Book Wyrm Scale",
+	"item.bookwyrms.scale_orange": "Orange Book Wyrm Scale",
+	"item.bookwyrms.scale_green": "Green Book Wyrm Scale",
+	"item.bookwyrms.scale_blue": "Blue Book Wyrm Scale",
+	"item.bookwyrms.scale_teal": "Teal Book Wyrm Scale",
+	"item.bookwyrms.scale_purple": "Purple Book Wyrm Scale",
+	
 	"item.bookwyrms.analyzer": "Book Wyrm Analyzer",
 	
 	"item.bookwyrms.book_wyrm_spawn_egg": "Book Wyrm Spawn Egg",

@@ -12,16 +12,25 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
-	public static RegistryObject<Item> bookWyrmRaw, bookWyrmCooked;
 	public static RegistryObject<Item> analyzer;
+	public static RegistryObject<Item> bookWyrmRaw, bookWyrmCooked;
+	public static RegistryObject<Item> scaleGrey, scaleRed, scaleOrange, scaleGreen, scaleBlue, scaleTeal, scalePurple;
 	public static RegistryObject<Item> spawnEgg;
 	public static final DeferredRegister<Item> REG = DeferredRegister.create(ForgeRegistries.ITEMS, BookWyrms.MODID);
 
 	static {
+		analyzer = initItem("analyzer", () -> new AnalyzerItem(defP().stacksTo(1)));
+		
 		bookWyrmRaw = initItem("book_wyrm_raw", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(3).saturationMod(0.3f).meat().build())));
 		bookWyrmCooked = initItem("book_wyrm_cooked", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(8).saturationMod(0.8f).meat().build())));
-
-		analyzer = initItem("analyzer", () -> new AnalyzerItem(defP().stacksTo(1)));
+		
+		scaleGrey = initItem("scale_grey", () -> new AnalyzerItem(defP()));
+		scaleRed = initItem("scale_red", () -> new AnalyzerItem(defP()));
+		scaleOrange = initItem("scale_orange", () -> new AnalyzerItem(defP()));
+		scaleGreen = initItem("scale_green", () -> new AnalyzerItem(defP()));
+		scaleBlue = initItem("scale_blue", () -> new AnalyzerItem(defP()));
+		scaleTeal = initItem("scale_teal", () -> new AnalyzerItem(defP()));
+		scalePurple = initItem("scale_purple", () -> new AnalyzerItem(defP()));
 		
 		spawnEgg = initItem("book_wyrm_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.bookWyrm, 0x3D8DC6, 0xFFF9E0, defP()));
 	}
