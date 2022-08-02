@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{ "item": "bookwyrms:scale_green" }
+	],
+	"result": { "item": "minecraft:green_dye" }
+}
