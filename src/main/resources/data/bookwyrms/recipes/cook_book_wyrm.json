@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:smelting",
+	"ingredient": { "item": "bookwyrms:book_wyrm_raw" },
+	"result": "bookwyrms:book_wyrm_cooked",
+	"experience": 0.15,
+	"cookingtime": 200
+}

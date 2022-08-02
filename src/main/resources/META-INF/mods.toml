@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[42,)"
+issueTrackerURL="https://github.com/Lykrast/BookWyrms/issues"
+license="MIT License https://github.com/Lykrast/BookWyrms/blob/master/LICENSE"
+
+[[mods]]
+modId="bookwyrms"
+version="${file.jarVersion}"
+displayName="Book Wyrms"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/book-wyrms"
+logoFile="logo.png"
+credits=""
+authors="Lykrast"
+description='''
+Colorful magical lizards that can recycle your unwanted enchantment books.
+'''
+
+[[dependencies.bookwyrms]]
+    modId="forge"
+    mandatory=true
+    versionRange="[42,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.bookwyrms]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19.1,]"
+    ordering="NONE"
+    side="BOTH"
