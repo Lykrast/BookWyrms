@@ -19,6 +19,7 @@ public class BookWyrmRenderer extends MobRenderer<BookWyrmEntity, BookWyrmModel<
 	
 	public BookWyrmRenderer(Context context) {
 		super(context, new BookWyrmModel<>(context.bakeLayer(BookWyrmModel.MODEL)), 0.7f);
+		addLayer(new TreasureEyesLayer<>(this));
 	}
 
 	@Override
