@@ -1,5 +1,6 @@
 package lykrast.bookwyrms;
 
+import lykrast.bookwyrms.registry.ModEntities;
 import lykrast.bookwyrms.registry.ModItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -14,6 +15,7 @@ public class BookWyrms {
 	public BookWyrms() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		ModItems.REG.register(bus);
+		ModEntities.REG.register(bus);
 	}
 	
 	public static ResourceLocation rl(String name) {

@@ -5,17 +5,21 @@ import java.util.function.Supplier;
 import lykrast.bookwyrms.BookWyrms;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
 	public static RegistryObject<Item> bookWyrmRaw, bookWyrmCooked;
+	public static RegistryObject<Item> spawnEgg;
 	public static final DeferredRegister<Item> REG = DeferredRegister.create(ForgeRegistries.ITEMS, BookWyrms.MODID);
 
-	static {		
+	static {
 		bookWyrmRaw = initItem("book_wyrm_raw", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(3).saturationMod(0.3f).meat().build())));
 		bookWyrmCooked = initItem("book_wyrm_cooked", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(8).saturationMod(0.8f).meat().build())));
+		
+		spawnEgg = initItem("book_wyrm_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.bookWyrm, 0x3D8DC6, 0xFFF9E0, defP()));
 	}
 
 	public static Item.Properties defP() {

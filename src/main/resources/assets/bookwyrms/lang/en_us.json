@@ -2,5 +2,7 @@
 	"item.bookwyrms.book_wyrm_raw": "Raw Book Wyrm",
 	"item.bookwyrms.book_wyrm_cooked": "Cooked Book Wyrm",
 	
+	"item.bookwyrms.book_wyrm_spawn_egg": "Book Wyrm Spawn Egg",
+	
     "itemGroup.bookwyrms": "Book Wyrms"
 }
