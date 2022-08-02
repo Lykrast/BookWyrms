@@ -1,0 +1,9 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{ "item": "bookwyrms:chad_bolus" },
+		{ "item": "minecraft:sugar" },
+		{ "tag": "forge:eggs" }
+	],
+	"result": { "item": "bookwyrms:chad_pie" }
+}
