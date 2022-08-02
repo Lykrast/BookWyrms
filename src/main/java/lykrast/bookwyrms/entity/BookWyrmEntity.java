@@ -101,15 +101,15 @@ public class BookWyrmEntity extends Animal {
 		//1% for wild treasure
 		wyrm.setTreasure(rand.nextInt(100) == 0);
 		
-		//Normal genes have 30% to be "outstanding"
+		//Normal genes have 33% to be "outstanding"
 		//Level, wild is 3-7 on a bellish curve, 8-12 for outstanding
 		wyrm.level = 3 + rand.nextIntBetweenInclusive(0, 2) + rand.nextIntBetweenInclusive(0, 2);
-		if (rand.nextDouble() < 0.3) wyrm.level += 5;
+		if (rand.nextInt(3) == 0) wyrm.level += 5;
 		//Digesting speed, 200-300, 133-200 for outstanding
 		wyrm.speed = 200 + rand.nextIntBetweenInclusive(0, 50) + rand.nextIntBetweenInclusive(0, 50);
-		if (rand.nextDouble() < 0.3) wyrm.speed = (wyrm.speed * 2) / 3;
+		if (rand.nextInt(3) == 0) wyrm.speed = (wyrm.speed * 2) / 3;
 		//Indigestion chance is 1-9%, outstanding 40-60
-		if (rand.nextDouble() < 0.3) wyrm.indigestChance = 0.4 + rand.nextDouble()*0.1 + rand.nextDouble()*0.1;
+		if (rand.nextInt(3) == 0) wyrm.indigestChance = 0.4 + rand.nextDouble()*0.1 + rand.nextDouble()*0.1;
 		else wyrm.indigestChance = 0.01 + rand.nextDouble()*0.04 + rand.nextDouble()*0.04;
 	}
 	
@@ -213,6 +213,26 @@ public class BookWyrmEntity extends Animal {
 	@Override
 	protected float getSoundVolume() {
 		return 0.4F;
+	}
+	
+	public int getEnchantingLevel() {
+		return level;
+	}
+	
+	public int getDigestingSpeed() {
+		return speed;
+	}
+	
+	public double getIndigestionChance() {
+		return indigestChance;
+	}
+	
+	public int getDigestedLevels() {
+		return digested;
+	}
+	
+	public int getLevelsToDigest() {
+		return toDigest;
 	}
 	
 	public int getWyrmType() {
