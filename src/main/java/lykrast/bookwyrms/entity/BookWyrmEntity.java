@@ -113,6 +113,9 @@ public class BookWyrmEntity extends Animal {
 		else wyrm.indigestChance = 0.01 + rand.nextDouble()*0.04 + rand.nextDouble()*0.04;
 	}
 	
+	//TODO Config?
+	public static final int MIN_LEVEL = 3, MAX_LEVEL = 50, MIN_SPEED = 1, MAX_SPEED = 600;
+	
 	public static void mixGenes(BookWyrmEntity a, BookWyrmEntity b, BookWyrmEntity child, RandomSource rand) {
 		//Type
 		int chartType = a.getWyrmType();
@@ -132,18 +135,22 @@ public class BookWyrmEntity extends Animal {
 		
 		//Normal genes, take a random point between the 2 parents
 		//Then add a random mutation, then clamp to the caps
+		//However, for sanity if 2 parents at the "desirable" caps breed then the child inherits it
 		//Level
 		int min = Math.min(a.level, b.level);
 		int max = Math.max(a.level, b.level);
-		child.level = Mth.clamp(rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 6) - 3, 3, 50);
+		if (min == MAX_LEVEL && max == MAX_LEVEL) child.level = MAX_LEVEL;
+		else child.level = Mth.clamp(rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 6) - 3, MIN_LEVEL, MAX_LEVEL);
 		//Speed
 		min = Math.min(a.speed, b.speed);
 		max = Math.max(a.speed, b.speed);
-		child.speed = Mth.clamp(rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 40) - 20, 1, 600);
-		//Digestion, for everyone sanity if both parents are at 0% then keep it at 0%
+		if (min == MIN_SPEED && max == MIN_SPEED) child.speed = MIN_SPEED;
+		else child.speed = Mth.clamp(rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 40) - 20, MIN_SPEED, MAX_SPEED);
+		//Digestion, cap on both ways cause maybe someone wants 100% to farm chad I won't judge
 		double min2 = Math.min(a.indigestChance, b.indigestChance);
 		double max2 = Math.max(a.indigestChance, b.indigestChance);
 		if (min2 < 0.01 && max2 < 0.01) child.indigestChance = 0;
+		else if (min2 > 0.99 && max2 > 0.99) child.indigestChance = 1;
 		else child.indigestChance = Mth.clamp(min2 + rand.nextDouble() * (max2-min2) + rand.nextDouble()*0.06 - 0.03, 0, 1);
 	}
 	
