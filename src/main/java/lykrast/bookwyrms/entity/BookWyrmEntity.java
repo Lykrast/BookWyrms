@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 
 import lykrast.bookwyrms.BookWyrms;
 import lykrast.bookwyrms.registry.ModEntities;
+import lykrast.bookwyrms.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -18,6 +19,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
@@ -39,9 +42,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.network.NetworkHooks;
 
 public class BookWyrmEntity extends Animal {
@@ -49,14 +54,15 @@ public class BookWyrmEntity extends Animal {
 	public static final int GREY = 0, RED = 1, ORANGE = 2, GREEN = 3, BLUE = 4, TEAL = 5, PURPLE = 6;
 	// Well how clever can I be to cram EVERYTHING into 1 byte?
 	// 0xDG000TTT with Digesting, "Golden", Type (6 types so 3 bits enough)
-	private static final EntityDataAccessor<Byte> DATA = SynchedEntityData.defineId(BookWyrmEntity.class, EntityDataSerializers.BYTE);
+	private static final EntityDataAccessor<Byte> DATA = SynchedEntityData.defineId(BookWyrmEntity.class,
+			EntityDataSerializers.BYTE);
 	private static final int DIGESTING_MASK = 0b10000000;
 	private static final int TREASURE_MASK = 0b01000000;
 	private static final int TYPE_MASK = 0b00111111;
-	//Stats
-	private int level, speed;
+	// Stats
+	private int enchLevel, digestSpeed;
 	private double indigestChance;
-	//Digestion
+	// Digestion
 	private int digested, toDigest, digestTimer;
 
 	public BookWyrmEntity(EntityType<? extends BookWyrmEntity> type, Level world) {
@@ -80,115 +86,193 @@ public class BookWyrmEntity extends Animal {
 	}
 
 	@Override
+	public InteractionResult mobInteract(Player player, InteractionHand hand) {
+		ItemStack stack = player.getItemInHand(hand);
+		if (level.isClientSide) {
+			if (!isBaby() && (stack.is(Items.ENCHANTED_BOOK) || stack.is(ModItems.chadBolus.get()))) return InteractionResult.CONSUME;
+			else return InteractionResult.PASS;
+		}
+		else {
+			if (!isBaby() && (stack.is(Items.ENCHANTED_BOOK) || stack.is(ModItems.chadBolus.get()))) {
+				// Eat enchanted book
+				toDigest += getBookValue(stack);
+				if (digestTimer <= 0) digestTimer = digestSpeed;
+				setDigesting(true);
+
+				if (!player.getAbilities().instabuild) stack.shrink(1);
+				playSound(SoundEvents.GENERIC_EAT, 1, 1);
+			}
+		}
+		return super.mobInteract(player, hand);
+	}
+
+	@Override
+	public void aiStep() {
+		super.aiStep();
+		if (!level.isClientSide && toDigest > 0) {
+			digestTimer--;
+			if (digestTimer <= 0) {
+				digested++;
+				toDigest--;
+				digestTimer = digestSpeed;
+				if (digested >= enchLevel) {
+					digested -= enchLevel;
+					makeBook();
+				}
+			}
+		}
+	}
+	
+	private void makeBook() {
+		ItemStack stack;
+		//Indigestion
+		if (random.nextDouble() < indigestChance) {
+			stack = new ItemStack(ModItems.chadBolus.get(), random.nextIntBetweenInclusive(1, enchLevel));
+			//TODO a different sound
+			playSound(SoundEvents.CHICKEN_EGG, 1, 1);
+		}
+		else {
+			//TODO the aglorithm that uses color
+			stack = EnchantmentHelper.enchantItem(random, new ItemStack(Items.BOOK), enchLevel, isTreasure());
+			playSound(SoundEvents.CHICKEN_EGG, 1, 1);
+		}
+		spawnAtLocation(stack);
+		gameEvent(GameEvent.ENTITY_PLACE);
+	}
+
+	public static int getBookValue(ItemStack stack) {
+		// Bolus is 1
+		if (stack.is(ModItems.chadBolus.get())) return 1;
+		// Sums the value of all enchants on the item, assuming it is a book
+		int total = 0;
+
+		for (var e : EnchantmentHelper.getEnchantments(stack).entrySet()) {
+			// TODO Apotheosis check
+			total += e.getKey().getMinCost(e.getValue());
+		}
+
+		return total;
+	}
+
+	@Override
 	public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob mate) {
 		BookWyrmEntity child = ModEntities.bookWyrm.get().create(world);
-		//If somehow the other breeder isn't a book wyrm, take the sole wyrm parent's genes
-		mixGenes(this, mate instanceof BookWyrmEntity ? (BookWyrmEntity)mate : this, child, random);
+		// If somehow the other breeder isn't a book wyrm, take the sole wyrm parent's
+		// genes
+		mixGenes(this, mate instanceof BookWyrmEntity ? (BookWyrmEntity) mate : this, child, random);
 		return child;
 	}
 
 	@Nullable
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData group, @Nullable CompoundTag compound) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty,
+			MobSpawnType spawnType, @Nullable SpawnGroupData group, @Nullable CompoundTag compound) {
 		wildGenes(this, world.getRandom());
 		return super.finalizeSpawn(world, difficulty, spawnType, group, compound);
 	}
-	
+
 	public static void wildGenes(BookWyrmEntity wyrm, RandomSource rand) {
-		//50% for grey in the wild, other are equally probable
+		// 50% for grey in the wild, other are equally probable
 		if (rand.nextBoolean()) wyrm.setWyrmType(GREY);
 		else wyrm.setWyrmType(rand.nextIntBetweenInclusive(1, 6));
-		//1% for wild treasure
+		// 1% for wild treasure
 		wyrm.setTreasure(rand.nextInt(100) == 0);
-		
-		//Normal genes have 33% to be "outstanding"
-		//Level, wild is 3-7 on a bellish curve, 8-12 for outstanding
-		wyrm.level = 3 + rand.nextIntBetweenInclusive(0, 2) + rand.nextIntBetweenInclusive(0, 2);
-		if (rand.nextInt(3) == 0) wyrm.level += 5;
-		//Digesting speed, 200-300, 133-200 for outstanding
-		wyrm.speed = 200 + rand.nextIntBetweenInclusive(0, 50) + rand.nextIntBetweenInclusive(0, 50);
-		if (rand.nextInt(3) == 0) wyrm.speed = (wyrm.speed * 2) / 3;
-		//Indigestion chance is 1-9%, outstanding 40-60
-		if (rand.nextInt(3) == 0) wyrm.indigestChance = 0.4 + rand.nextDouble()*0.1 + rand.nextDouble()*0.1;
-		else wyrm.indigestChance = 0.01 + rand.nextDouble()*0.04 + rand.nextDouble()*0.04;
+
+		// Normal genes have 33% to be "outstanding"
+		// Level, wild is 3-7 on a bellish curve, 8-12 for outstanding
+		wyrm.enchLevel = 3 + rand.nextIntBetweenInclusive(0, 2) + rand.nextIntBetweenInclusive(0, 2);
+		if (rand.nextInt(3) == 0) wyrm.enchLevel += 5;
+		// Digesting speed, 200-300, 133-200 for outstanding
+		wyrm.digestSpeed = 200 + rand.nextIntBetweenInclusive(0, 50) + rand.nextIntBetweenInclusive(0, 50);
+		if (rand.nextInt(3) == 0) wyrm.digestSpeed = (wyrm.digestSpeed * 2) / 3;
+		// Indigestion chance is 1-9%, outstanding 60-80
+		if (rand.nextInt(3) == 0) wyrm.indigestChance = 0.6 + rand.nextDouble() * 0.1 + rand.nextDouble() * 0.1;
+		else wyrm.indigestChance = 0.01 + rand.nextDouble() * 0.04 + rand.nextDouble() * 0.04;
 	}
-	
-	//TODO Config?
+
+	// TODO Config?
 	public static final int MIN_LEVEL = 3, MAX_LEVEL = 50, MIN_SPEED = 1, MAX_SPEED = 600;
-	
+
 	public static void mixGenes(BookWyrmEntity a, BookWyrmEntity b, BookWyrmEntity child, RandomSource rand) {
-		//Type
+		// Type
 		int chartType = a.getWyrmType();
-		//Grey + something else = take the other
-		if (chartType ==  GREY) chartType = b.getWyrmType();
-		//Otherwise take a random parent
+		// Grey + something else = take the other
+		if (chartType == GREY) chartType = b.getWyrmType();
+		// Otherwise take a random parent
 		else if (b.getWyrmType() != GREY && rand.nextBoolean()) chartType = b.getWyrmType();
 		child.setWyrmType(offspringWyrmType(chartType, rand));
-		
-		//Treasure, 10% if both parents, 5% if 1 parent, 1% if 0
+
+		// Treasure, 10% if both parents, 5% if 1 parent, 1% if 0
 		int treasureChance = 100;
 		if (a.isTreasure() || b.isTreasure()) {
 			if (a.isTreasure() && b.isTreasure()) treasureChance = 10;
 			else treasureChance = 20;
 		}
 		child.setTreasure(rand.nextInt(treasureChance) == 0);
-		
-		//Normal genes, take a random point between the 2 parents
-		//Then add a random mutation, then clamp to the caps
-		//However, for sanity if 2 parents at the "desirable" caps breed then the child inherits it
-		//Level
-		int min = Math.min(a.level, b.level);
-		int max = Math.max(a.level, b.level);
-		if (min == MAX_LEVEL && max == MAX_LEVEL) child.level = MAX_LEVEL;
-		else child.level = Mth.clamp(rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 6) - 3, MIN_LEVEL, MAX_LEVEL);
-		//Speed
-		min = Math.min(a.speed, b.speed);
-		max = Math.max(a.speed, b.speed);
-		if (min == MIN_SPEED && max == MIN_SPEED) child.speed = MIN_SPEED;
-		else child.speed = Mth.clamp(rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 40) - 20, MIN_SPEED, MAX_SPEED);
-		//Digestion, cap on both ways cause maybe someone wants 100% to farm chad I won't judge
+
+		// Normal genes, take a random point between the 2 parents
+		// Then add a random mutation, then clamp to the caps
+		// However, for sanity if 2 parents at the "desirable" caps breed then the child
+		// inherits it
+		// Level
+		int min = Math.min(a.enchLevel, b.enchLevel);
+		int max = Math.max(a.enchLevel, b.enchLevel);
+		if (min == MAX_LEVEL && max == MAX_LEVEL) child.enchLevel = MAX_LEVEL;
+		else child.enchLevel = Mth.clamp(
+				rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 6) - 3, MIN_LEVEL, MAX_LEVEL);
+		// Speed
+		min = Math.min(a.digestSpeed, b.digestSpeed);
+		max = Math.max(a.digestSpeed, b.digestSpeed);
+		if (min == MIN_SPEED && max == MIN_SPEED) child.digestSpeed = MIN_SPEED;
+		else child.digestSpeed = Mth.clamp(
+				rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 40) - 20, MIN_SPEED,
+				MAX_SPEED);
+		// Digestion, cap on both ways cause maybe someone wants 100% to farm chad I
+		// won't judge
 		double min2 = Math.min(a.indigestChance, b.indigestChance);
 		double max2 = Math.max(a.indigestChance, b.indigestChance);
 		if (min2 < 0.01 && max2 < 0.01) child.indigestChance = 0;
 		else if (min2 > 0.99 && max2 > 0.99) child.indigestChance = 1;
-		else child.indigestChance = Mth.clamp(min2 + rand.nextDouble() * (max2-min2) + rand.nextDouble()*0.06 - 0.03, 0, 1);
+		else child.indigestChance = Mth
+				.clamp(min2 + rand.nextDouble() * (max2 - min2) + rand.nextDouble() * 0.06 - 0.03, 0, 1);
 	}
-	
+
 	public static int offspringWyrmType(int type, RandomSource rand) {
-		//All have 50% chance to match parent
+		// All have 50% chance to match parent
 		if (rand.nextBoolean()) return type;
-		
-		//Grey is equiprobable on the rest
+
+		// Grey is equiprobable on the rest
 		if (type == GREY) return rand.nextIntBetweenInclusive(1, 6);
-		//All others have 20% chance to make a grey (so 40% after passing the 50% check)
+		// All others have 20% chance to make a grey (so 40% after passing the 50%
+		// check)
 		if (rand.nextInt(5) < 2) return GREY;
-		
-		//Purple is equiprobable on the remainer
+
+		// Purple is equiprobable on the remainer
 		if (type == PURPLE) return rand.nextIntBetweenInclusive(1, 5);
-		//All remaining have 5% to make a purple (so 1/6 of the remaining 30%)
+		// All remaining have 5% to make a purple (so 1/6 of the remaining 30%)
 		if (rand.nextInt(6) == 0) return PURPLE;
-		
-		//Blue and teal are equiprobable on the remaining 4
+
+		// Blue and teal are equiprobable on the remaining 4
 		if (type == BLUE || type == TEAL) {
 			int i = rand.nextIntBetweenInclusive(1, 4);
 			if (i >= type) i++;
 			return i;
 		}
-		
-		//Remaining cases: red orange and green
+
+		// Remaining cases: red orange and green
 		switch (type) {
 			case RED:
-				//Equiprobable between orange and blue
+				// Equiprobable between orange and blue
 				return rand.nextBoolean() ? ORANGE : BLUE;
 			case ORANGE:
-				//Equiprobable between red and blue
+				// Equiprobable between red and blue
 				return rand.nextBoolean() ? RED : BLUE;
 			case GREEN:
-				//Equiprobable between blue and teal
+				// Equiprobable between blue and teal
 				return rand.nextBoolean() ? BLUE : TEAL;
 		}
-		
-		//Fallback
+
+		// Fallback
 		return type;
 	}
 
@@ -221,54 +305,54 @@ public class BookWyrmEntity extends Animal {
 	protected float getSoundVolume() {
 		return 0.4F;
 	}
-	
+
 	public int getEnchantingLevel() {
-		return level;
+		return enchLevel;
 	}
-	
+
 	public int getDigestingSpeed() {
-		return speed;
+		return digestSpeed;
 	}
-	
+
 	public double getIndigestionChance() {
 		return indigestChance;
 	}
-	
+
 	public int getDigestedLevels() {
 		return digested;
 	}
-	
+
 	public int getLevelsToDigest() {
 		return toDigest;
 	}
-	
+
 	public int getWyrmType() {
-		//7 variants
+		// 7 variants
 		return Mth.clamp(entityData.get(DATA) & TYPE_MASK, 0, 6);
 	}
-	
+
 	public void setWyrmType(int type) {
 		byte b = entityData.get(DATA);
-		entityData.set(DATA, (byte)((b & (~TYPE_MASK) | (type & TYPE_MASK))));
+		entityData.set(DATA, (byte) ((b & (~TYPE_MASK) | (type & TYPE_MASK))));
 	}
-	
+
 	public boolean isDigesting() {
 		return (entityData.get(DATA) & DIGESTING_MASK) > 0;
 	}
-	
+
 	public void setDigesting(boolean digest) {
-		byte b = (byte)(entityData.get(DATA) & (~DIGESTING_MASK));
-		if (digest) b = (byte)(b | DIGESTING_MASK);
+		byte b = (byte) (entityData.get(DATA) & (~DIGESTING_MASK));
+		if (digest) b = (byte) (b | DIGESTING_MASK);
 		entityData.set(DATA, b);
 	}
-	
+
 	public boolean isTreasure() {
 		return (entityData.get(DATA) & TREASURE_MASK) > 0;
 	}
-	
+
 	public void setTreasure(boolean treasure) {
-		byte b = (byte)(entityData.get(DATA) & (~TREASURE_MASK));
-		if (treasure) b = (byte)(b | TREASURE_MASK);
+		byte b = (byte) (entityData.get(DATA) & (~TREASURE_MASK));
+		if (treasure) b = (byte) (b | TREASURE_MASK);
 		entityData.set(DATA, b);
 	}
 
@@ -277,8 +361,8 @@ public class BookWyrmEntity extends Animal {
 		super.readAdditionalSaveData(compound);
 		setWyrmType(compound.getInt("WyrmType"));
 		setTreasure(compound.getBoolean("Treasure"));
-		level = compound.getInt("BWLevel");
-		speed = compound.getInt("BWSpeed");
+		enchLevel = compound.getInt("BWLevel");
+		digestSpeed = compound.getInt("BWSpeed");
 		indigestChance = compound.getDouble("BWIndigestion");
 		digested = compound.getInt("Digested");
 		toDigest = compound.getInt("ToDigest");
@@ -291,23 +375,18 @@ public class BookWyrmEntity extends Animal {
 		super.addAdditionalSaveData(compound);
 		compound.putInt("WyrmType", getWyrmType());
 		compound.putBoolean("Treasure", isTreasure());
-		compound.putInt("BWLevel", level);
-		compound.putInt("BWSpeed", speed);
+		compound.putInt("BWLevel", enchLevel);
+		compound.putInt("BWSpeed", digestSpeed);
 		compound.putDouble("BWIndigestion", indigestChance);
 		compound.putInt("Digested", digested);
 		compound.putInt("ToDigest", toDigest);
 		compound.putInt("DigestTimer", digestTimer);
 	}
-	
-	private static final ResourceLocation[] LOOT_TABLES = {
-			BookWyrms.rl("entities/book_wyrm_grey"),
-			BookWyrms.rl("entities/book_wyrm_red"),
-			BookWyrms.rl("entities/book_wyrm_orange"),
-			BookWyrms.rl("entities/book_wyrm_green"),
-			BookWyrms.rl("entities/book_wyrm_blue"),
-			BookWyrms.rl("entities/book_wyrm_teal"),
-			BookWyrms.rl("entities/book_wyrm_purple")
-	};
+
+	private static final ResourceLocation[] LOOT_TABLES = { BookWyrms.rl("entities/book_wyrm_grey"),
+			BookWyrms.rl("entities/book_wyrm_red"), BookWyrms.rl("entities/book_wyrm_orange"),
+			BookWyrms.rl("entities/book_wyrm_green"), BookWyrms.rl("entities/book_wyrm_blue"),
+			BookWyrms.rl("entities/book_wyrm_teal"), BookWyrms.rl("entities/book_wyrm_purple") };
 
 	@Override
 	protected ResourceLocation getDefaultLootTable() {
