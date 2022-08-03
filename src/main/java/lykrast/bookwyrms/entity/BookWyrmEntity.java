@@ -12,6 +12,7 @@ import lykrast.bookwyrms.BookWyrms;
 import lykrast.bookwyrms.registry.ModEntities;
 import lykrast.bookwyrms.registry.ModItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -121,6 +122,12 @@ public class BookWyrmEntity extends Animal {
 	@Override
 	public void aiStep() {
 		super.aiStep();
+		if (level.isClientSide && isDigesting()) {
+			//Digesting particles
+			for (int i = 0; i < 2; ++i) {
+				level.addParticle(ParticleTypes.ENCHANT, getRandomX(0.5), getRandomY(), getRandomZ(0.5), (random.nextDouble() - 0.5) * 2.0, -random.nextDouble(), (random.nextDouble() - 0.5) * 2.0);
+			}
+		}
 		if (!level.isClientSide && toDigest > 0) {
 			digestTimer--;
 			if (digestTimer <= 0) {
