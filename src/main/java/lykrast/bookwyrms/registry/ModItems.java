@@ -25,16 +25,16 @@ public class ModItems {
 		
 		bookWyrmRaw = initItem("book_wyrm_raw", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(3).saturationMod(0.3f).meat().build())));
 		bookWyrmCooked = initItem("book_wyrm_cooked", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(8).saturationMod(0.8f).meat().build())));
-		chadBolus = initItem("chad_bolus", () -> new AnalyzerItem(defP()));
+		chadBolus = initItem("chad_bolus", () -> new Item(defP()));
 		chadPie = initItem("chad_pie", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.8f).effect(() -> new MobEffectInstance(MobEffects.HUNGER, 5*20, 0), 0.3f).build())));
 		
-		scaleGrey = initItem("scale_grey", () -> new AnalyzerItem(defP()));
-		scaleRed = initItem("scale_red", () -> new AnalyzerItem(defP()));
-		scaleOrange = initItem("scale_orange", () -> new AnalyzerItem(defP()));
-		scaleGreen = initItem("scale_green", () -> new AnalyzerItem(defP()));
-		scaleBlue = initItem("scale_blue", () -> new AnalyzerItem(defP()));
-		scaleTeal = initItem("scale_teal", () -> new AnalyzerItem(defP()));
-		scalePurple = initItem("scale_purple", () -> new AnalyzerItem(defP()));
+		scaleGrey = initItem("scale_grey", () -> new Item(defP()));
+		scaleRed = initItem("scale_red", () -> new Item(defP()));
+		scaleOrange = initItem("scale_orange", () -> new Item(defP()));
+		scaleGreen = initItem("scale_green", () -> new Item(defP()));
+		scaleBlue = initItem("scale_blue", () -> new Item(defP()));
+		scaleTeal = initItem("scale_teal", () -> new Item(defP()));
+		scalePurple = initItem("scale_purple", () -> new Item(defP()));
 		
 		spawnEgg = initItem("book_wyrm_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.bookWyrm, 0x3D8DC6, 0xFFF9E0, defP()));
 	}
