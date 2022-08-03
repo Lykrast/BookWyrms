@@ -1,0 +1,11 @@
+{
+	"type": "forge:add_spawns",
+	"biomes": "#bookwyrms:has_book_wyrms",
+	"spawners":
+	{
+		"type": "bookwyrms:book_wyrm",
+		"weight": 3,
+		"minCount": 2,
+		"maxCount": 5
+	}
+}
