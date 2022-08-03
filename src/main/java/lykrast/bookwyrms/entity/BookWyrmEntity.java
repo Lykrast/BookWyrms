@@ -1,7 +1,12 @@
 package lykrast.bookwyrms.entity;
 
+import java.util.Iterator;
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.google.common.collect.Lists;
 
 import lykrast.bookwyrms.BookWyrms;
 import lykrast.bookwyrms.registry.ModEntities;
@@ -16,8 +21,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -39,23 +47,27 @@ import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class BookWyrmEntity extends Animal {
 	// Types 0-6 : grey, red, orange, green, blue, teal, purple
 	public static final int GREY = 0, RED = 1, ORANGE = 2, GREEN = 3, BLUE = 4, TEAL = 5, PURPLE = 6;
 	// Well how clever can I be to cram EVERYTHING into 1 byte?
 	// 0xDG000TTT with Digesting, "Golden", Type (6 types so 3 bits enough)
-	private static final EntityDataAccessor<Byte> DATA = SynchedEntityData.defineId(BookWyrmEntity.class,
-			EntityDataSerializers.BYTE);
+	private static final EntityDataAccessor<Byte> DATA = SynchedEntityData.defineId(BookWyrmEntity.class, EntityDataSerializers.BYTE);
 	private static final int DIGESTING_MASK = 0b10000000;
 	private static final int TREASURE_MASK = 0b01000000;
 	private static final int TYPE_MASK = 0b00111111;
@@ -122,22 +134,111 @@ public class BookWyrmEntity extends Animal {
 			}
 		}
 	}
-	
+
+	// It's TagKey<Item> but java can't generic arrays :(
+	private static final TagKey<?>[] POOLS = { null, ItemTags.create(BookWyrms.rl("pool_red")), ItemTags.create(BookWyrms.rl("pool_orange")),
+			ItemTags.create(BookWyrms.rl("pool_green")), ItemTags.create(BookWyrms.rl("pool_blue")), ItemTags.create(BookWyrms.rl("pool_teal")),
+			ItemTags.create(BookWyrms.rl("pool_purple")) };
+
 	private void makeBook() {
 		ItemStack stack;
-		//Indigestion
+		// Indigestion
 		if (random.nextDouble() < indigestChance) {
 			stack = new ItemStack(ModItems.chadBolus.get(), random.nextIntBetweenInclusive(1, enchLevel));
-			//TODO a different sound
+			// TODO a blergh sound
 			playSound(SoundEvents.CHICKEN_EGG, 1, 1);
 		}
 		else {
-			//TODO the aglorithm that uses color
-			stack = EnchantmentHelper.enchantItem(random, new ItemStack(Items.BOOK), enchLevel, isTreasure());
-			playSound(SoundEvents.CHICKEN_EGG, 1, 1);
+			//Based on EnchantmentHelper.enchantItem
+			@SuppressWarnings("unchecked")
+			List<EnchantmentInstance> ench = selectEnchantments(random, (TagKey<Item>) POOLS[getWyrmType()], enchLevel, isTreasure());
+			if (ench.isEmpty()) {
+				//TODO sus chad bolus to have the error message
+				stack = new ItemStack(ModItems.chadBolus.get(), random.nextIntBetweenInclusive(1, enchLevel));
+				//TODO a blergh sound
+				playSound(SoundEvents.CHICKEN_EGG, 1, 1);
+			}
+			else {
+				stack = new ItemStack(Items.ENCHANTED_BOOK);
+				for (EnchantmentInstance e : ench) EnchantedBookItem.addEnchantment(stack, e);
+				playSound(SoundEvents.CHICKEN_EGG, 1, 1);
+			}
+
 		}
 		spawnAtLocation(stack);
 		gameEvent(GameEvent.ENTITY_PLACE);
+	}
+
+	// Rewritten EnchantmentHelper.selectEnchantment for our needs
+	private static List<EnchantmentInstance> selectEnchantments(RandomSource rand, @Nullable TagKey<Item> testers, int enchantability, boolean treasure) {
+		List<EnchantmentInstance> list = Lists.newArrayList();
+		List<EnchantmentInstance> enchants = getValidEnchantments(getTestersFromTag(testers), enchantability, treasure);
+		if (!enchants.isEmpty()) {
+			EnchantmentInstance added = WeightedRandom.getRandomItem(rand, enchants).orElse(null);
+			if (added == null) return list;
+			list.add(added);
+			//Make sure our new book isn't worth more value to the wyrms than it was fed
+			int remaining = enchantability - added.enchantment.getMinCost(added.level);
+			while (rand.nextInt(50) <= enchantability) {
+				filterCompatibleEnchantments(enchants, added, remaining);
+				if (enchants.isEmpty()) break;
+
+				added = WeightedRandom.getRandomItem(rand, enchants).orElse(null);
+				if (added == null) return list;
+				list.add(added);
+				remaining -= added.enchantment.getMinCost(added.level);
+				enchantability /= 2;
+			}
+		}
+
+		return list;
+	}
+
+	//Rewritten EnchantmentHelper.filterCompatibleEnchantments to filter stuff in one pass
+	public static void filterCompatibleEnchantments(List<EnchantmentInstance> list, EnchantmentInstance ench, int cap) {
+		Iterator<EnchantmentInstance> iterator = list.iterator();
+		while (iterator.hasNext()) {
+			EnchantmentInstance next = iterator.next();
+			if (next.enchantment.getMinCost(next.level) > cap || !ench.enchantment.isCompatibleWith(next.enchantment)) iterator.remove();
+		}
+	}
+
+	// Rewritten EnchantmentHelper.getAvailableEnchantmentResults for our needs
+	private static List<EnchantmentInstance> getValidEnchantments(List<ItemStack> testers, int enchatability, boolean treasure) {
+		List<EnchantmentInstance> list = Lists.newArrayList();
+
+		for (Enchantment ench : ForgeRegistries.ENCHANTMENTS) {
+			// For now I'll take the choice of not allowing Soul Speed and Swift Sneak,
+			// might change
+			if (ench.isDiscoverable() && ench.isAllowedOnBooks() && (treasure || !ench.isTreasureOnly()) && compatibleTesters(ench, testers)) {
+				for (int i = ench.getMaxLevel(); i > ench.getMinLevel() - 1; --i) {
+					if (enchatability >= ench.getMinCost(i) && enchatability <= ench.getMaxCost(i)) {
+						list.add(new EnchantmentInstance(ench, i));
+						break;
+					}
+				}
+			}
+		}
+
+		return list;
+	}
+
+	private static boolean compatibleTesters(Enchantment ench, List<ItemStack> testers) {
+		if (testers.isEmpty()) return true;
+		for (ItemStack stack : testers) if (ench.canApplyAtEnchantingTable(stack)) return true;
+		return false;
+	}
+
+	private static List<ItemStack> getTestersFromTag(@Nullable TagKey<Item> tag) {
+		List<ItemStack> list = Lists.newArrayList();
+		if (tag == null) return list;
+
+		// The deprecation is not for our use
+		for (Item item : ForgeRegistries.ITEMS.tags().getTag(tag)) {
+			list.add(new ItemStack(item));
+		}
+
+		return list;
 	}
 
 	public static int getBookValue(ItemStack stack) {
@@ -165,8 +266,8 @@ public class BookWyrmEntity extends Animal {
 
 	@Nullable
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty,
-			MobSpawnType spawnType, @Nullable SpawnGroupData group, @Nullable CompoundTag compound) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData group,
+			@Nullable CompoundTag compound) {
 		wildGenes(this, world.getRandom());
 		return super.finalizeSpawn(world, difficulty, spawnType, group, compound);
 	}
@@ -218,23 +319,19 @@ public class BookWyrmEntity extends Animal {
 		int min = Math.min(a.enchLevel, b.enchLevel);
 		int max = Math.max(a.enchLevel, b.enchLevel);
 		if (min == MAX_LEVEL && max == MAX_LEVEL) child.enchLevel = MAX_LEVEL;
-		else child.enchLevel = Mth.clamp(
-				rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 6) - 3, MIN_LEVEL, MAX_LEVEL);
+		else child.enchLevel = Mth.clamp(rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 6) - 3, MIN_LEVEL, MAX_LEVEL);
 		// Speed
 		min = Math.min(a.digestSpeed, b.digestSpeed);
 		max = Math.max(a.digestSpeed, b.digestSpeed);
 		if (min == MIN_SPEED && max == MIN_SPEED) child.digestSpeed = MIN_SPEED;
-		else child.digestSpeed = Mth.clamp(
-				rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 40) - 20, MIN_SPEED,
-				MAX_SPEED);
+		else child.digestSpeed = Mth.clamp(rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 40) - 20, MIN_SPEED, MAX_SPEED);
 		// Digestion, cap on both ways cause maybe someone wants 100% to farm chad I
 		// won't judge
 		double min2 = Math.min(a.indigestChance, b.indigestChance);
 		double max2 = Math.max(a.indigestChance, b.indigestChance);
 		if (min2 < 0.01 && max2 < 0.01) child.indigestChance = 0;
 		else if (min2 > 0.99 && max2 > 0.99) child.indigestChance = 1;
-		else child.indigestChance = Mth
-				.clamp(min2 + rand.nextDouble() * (max2 - min2) + rand.nextDouble() * 0.06 - 0.03, 0, 1);
+		else child.indigestChance = Mth.clamp(min2 + rand.nextDouble() * (max2 - min2) + rand.nextDouble() * 0.06 - 0.03, 0, 1);
 	}
 
 	public static int offspringWyrmType(int type, RandomSource rand) {
@@ -383,9 +480,8 @@ public class BookWyrmEntity extends Animal {
 		compound.putInt("DigestTimer", digestTimer);
 	}
 
-	private static final ResourceLocation[] LOOT_TABLES = { BookWyrms.rl("entities/book_wyrm_grey"),
-			BookWyrms.rl("entities/book_wyrm_red"), BookWyrms.rl("entities/book_wyrm_orange"),
-			BookWyrms.rl("entities/book_wyrm_green"), BookWyrms.rl("entities/book_wyrm_blue"),
+	private static final ResourceLocation[] LOOT_TABLES = { BookWyrms.rl("entities/book_wyrm_grey"), BookWyrms.rl("entities/book_wyrm_red"),
+			BookWyrms.rl("entities/book_wyrm_orange"), BookWyrms.rl("entities/book_wyrm_green"), BookWyrms.rl("entities/book_wyrm_blue"),
 			BookWyrms.rl("entities/book_wyrm_teal"), BookWyrms.rl("entities/book_wyrm_purple") };
 
 	@Override
