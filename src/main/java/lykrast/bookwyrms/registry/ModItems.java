@@ -3,7 +3,7 @@ package lykrast.bookwyrms.registry;
 import java.util.function.Supplier;
 
 import lykrast.bookwyrms.BookWyrms;
-import lykrast.bookwyrms.item.AnalyzerItem;
+import lykrast.bookwyrms.item.*;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -15,7 +15,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
 	public static RegistryObject<Item> analyzer;
-	public static RegistryObject<Item> bookWyrmRaw, bookWyrmCooked, chadBolus, chadPie;
+	public static RegistryObject<Item> bookWyrmRaw, bookWyrmCooked, chadBolus, chadBolusSus, chadPie;
 	public static RegistryObject<Item> scaleGrey, scaleRed, scaleOrange, scaleGreen, scaleBlue, scaleTeal, scalePurple;
 	public static RegistryObject<Item> spawnEgg;
 	public static final DeferredRegister<Item> REG = DeferredRegister.create(ForgeRegistries.ITEMS, BookWyrms.MODID);
@@ -26,6 +26,8 @@ public class ModItems {
 		bookWyrmRaw = initItem("book_wyrm_raw", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(3).saturationMod(0.3f).meat().build())));
 		bookWyrmCooked = initItem("book_wyrm_cooked", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(8).saturationMod(0.8f).meat().build())));
 		chadBolus = initItem("chad_bolus", () -> new Item(defP()));
+		//This one doesn't appear in creative since it's an error message
+		chadBolusSus = initItem("chad_bolus_suspicious", () -> new SusBolusItem(new Item.Properties()));
 		chadPie = initItem("chad_pie", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.8f).effect(() -> new MobEffectInstance(MobEffects.HUNGER, 5*20, 0), 0.3f).build())));
 		
 		scaleGrey = initItem("scale_grey", () -> new Item(defP()));

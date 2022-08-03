@@ -153,8 +153,8 @@ public class BookWyrmEntity extends Animal {
 			@SuppressWarnings("unchecked")
 			List<EnchantmentInstance> ench = selectEnchantments(random, (TagKey<Item>) POOLS[getWyrmType()], enchLevel, isTreasure());
 			if (ench.isEmpty()) {
-				//TODO sus chad bolus to have the error message
-				stack = new ItemStack(ModItems.chadBolus.get(), random.nextIntBetweenInclusive(1, enchLevel));
+				//No valid enchant, give the error message
+				stack = new ItemStack(ModItems.chadBolusSus.get(), enchLevel);
 				//TODO a blergh sound
 				playSound(SoundEvents.CHICKEN_EGG, 1, 1);
 			}
