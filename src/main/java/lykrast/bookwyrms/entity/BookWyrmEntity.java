@@ -286,8 +286,8 @@ public class BookWyrmEntity extends Animal {
 		// Digesting speed, 200-300, 133-200 for outstanding
 		wyrm.digestSpeed = 200 + rand.nextIntBetweenInclusive(0, 50) + rand.nextIntBetweenInclusive(0, 50);
 		if (rand.nextInt(3) == 0) wyrm.digestSpeed = (wyrm.digestSpeed * 2) / 3;
-		// Indigestion chance is 1-9%, outstanding 60-80
-		if (rand.nextInt(3) == 0) wyrm.indigestChance = 0.6 + rand.nextDouble() * 0.1 + rand.nextDouble() * 0.1;
+		// Indigestion chance is 1-9%, outstanding 50-70
+		if (rand.nextInt(3) == 0) wyrm.indigestChance = 0.5 + rand.nextDouble() * 0.1 + rand.nextDouble() * 0.1;
 		else wyrm.indigestChance = 0.01 + rand.nextDouble() * 0.04 + rand.nextDouble() * 0.04;
 	}
 
