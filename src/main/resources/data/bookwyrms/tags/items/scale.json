@@ -1,0 +1,12 @@
+{
+	"replace": false,
+	"values": [
+		"bookwyrms:scale_grey",
+		"bookwyrms:scale_red",
+		"bookwyrms:scale_orange",
+		"bookwyrms:scale_green",
+		"bookwyrms:scale_blue",
+		"bookwyrms:scale_teal",
+		"bookwyrms:scale_purple"
+	]
+}

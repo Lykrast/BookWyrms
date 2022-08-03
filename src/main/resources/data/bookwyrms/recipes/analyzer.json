@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"CSC",
+		"CGC"
+	],
+	"key": {
+		"C": { "tag": "forge:ingots/copper" },
+		"S": { "tag": "bookwyrms:scale" },
+		"G": { "tag": "forge:dusts/glowstone" }
+	},
+	"result": { "item": "bookwyrms:analyzer" }
+}
