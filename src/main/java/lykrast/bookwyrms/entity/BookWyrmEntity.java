@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 
 import lykrast.bookwyrms.BookWyrms;
 import lykrast.bookwyrms.item.WyrmutagenHelper;
+import lykrast.bookwyrms.registry.BWSounds;
 import lykrast.bookwyrms.registry.ModEntities;
 import lykrast.bookwyrms.registry.ModItems;
 import net.minecraft.core.BlockPos;
@@ -157,8 +158,7 @@ public class BookWyrmEntity extends Animal {
 		// Indigestion
 		if (random.nextDouble() < indigestChance) {
 			stack = new ItemStack(ModItems.chadBolus.get(), random.nextIntBetweenInclusive(1, enchLevel));
-			// TODO a blergh sound
-			playSound(SoundEvents.CHICKEN_EGG, 1, 1);
+			playSound(BWSounds.wyrmIndigestion.get(), 1, 1);
 		}
 		else {
 			//Based on EnchantmentHelper.enchantItem
@@ -167,13 +167,12 @@ public class BookWyrmEntity extends Animal {
 			if (ench.isEmpty()) {
 				//No valid enchant, give the error message
 				stack = new ItemStack(ModItems.chadBolusSus.get(), enchLevel);
-				//TODO a blergh sound
-				playSound(SoundEvents.CHICKEN_EGG, 1, 1);
+				playSound(BWSounds.wyrmIndigestion.get(), 1, 1);
 			}
 			else {
 				stack = new ItemStack(Items.ENCHANTED_BOOK);
 				for (EnchantmentInstance e : ench) EnchantedBookItem.addEnchantment(stack, e);
-				playSound(SoundEvents.CHICKEN_EGG, 1, 1);
+				playSound(BWSounds.wyrmBook.get(), 1, 1);
 			}
 
 		}
@@ -456,21 +455,22 @@ public class BookWyrmEntity extends Animal {
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return SoundEvents.COW_AMBIENT;
+		return BWSounds.wyrmIdle.get();
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSource) {
-		return SoundEvents.COW_HURT;
+		return BWSounds.wyrmHurt.get();
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SoundEvents.COW_DEATH;
+		return BWSounds.wyrmDeath.get();
 	}
 
 	@Override
 	protected void playStepSound(BlockPos pos, BlockState state) {
+		//Subtitles are generic so we good on keeping this.
 		playSound(SoundEvents.COW_STEP, 0.15F, 1.0F);
 	}
 

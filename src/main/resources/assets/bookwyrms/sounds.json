@@ -1,0 +1,27 @@
+{
+	"entity.bookwyrm.idle": {
+		"subtitle": "subtitles.bookwyrms.entity.bookwyrm.idle",
+		"sounds": [
+			{ "name": "bookwyrms:bookwyrm/idle1", "volume": 0.75 },
+			{ "name": "bookwyrms:bookwyrm/idle2", "volume": 0.75 },
+			{ "name": "bookwyrms:bookwyrm/idle3", "volume": 0.75 },
+			{ "name": "bookwyrms:bookwyrm/idle4", "volume": 0.75 }
+		]
+	},
+	"entity.bookwyrm.hurt": {
+		"subtitle": "subtitles.bookwyrms.entity.bookwyrm.hurt",
+		"sounds": [ { "name": "bookwyrms:bookwyrm/hurt", "volume": 0.75 } ]
+	},
+	"entity.bookwyrm.death": {
+		"subtitle": "subtitles.bookwyrms.entity.bookwyrm.death",
+		"sounds": [ "bookwyrms:bookwyrm/death" ]
+	},
+	"entity.bookwyrm.book": {
+		"subtitle": "subtitles.bookwyrms.entity.bookwyrm.book",
+		"sounds": [ "minecraft:mob/chicken/plop" ]
+	},
+	"entity.bookwyrm.indigestion": {
+		"subtitle": "subtitles.bookwyrms.entity.bookwyrm.indigestion",
+		"sounds": [ { "name": "minecraft:random/burp", "pitch": 0.5 } ]
+	}
+}

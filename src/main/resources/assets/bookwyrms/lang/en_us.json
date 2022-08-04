@@ -58,5 +58,13 @@
 	"status.bookwyrms.analyze.wyrmutagen": "§dActive Wyrmutagen: §r",
 	"status.bookwyrms.analyze.wyrmutagen2": "§dActive Wyrmutagens: §r",
 	
+	"entity.bookwyrms.book_wyrm": "Book Wyrm",
+	
+	"subtitles.bookwyrms.entity.bookwyrm.idle": "Book Wyrm hisses",
+	"subtitles.bookwyrms.entity.bookwyrm.hurt": "Book Wyrm hurt",
+	"subtitles.bookwyrms.entity.bookwyrm.death": "Book Wyrm dies",
+	"subtitles.bookwyrms.entity.bookwyrm.book": "Book Wyrm writes a book",
+	"subtitles.bookwyrms.entity.bookwyrm.indigestion": "Book Wyrm regurgitates",
+	
     "itemGroup.bookwyrms": "Book Wyrms"
 }

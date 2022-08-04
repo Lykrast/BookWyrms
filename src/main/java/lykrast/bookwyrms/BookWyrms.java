@@ -1,5 +1,6 @@
 package lykrast.bookwyrms;
 
+import lykrast.bookwyrms.registry.BWSounds;
 import lykrast.bookwyrms.registry.ModEntities;
 import lykrast.bookwyrms.registry.ModItems;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +17,7 @@ public class BookWyrms {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		ModItems.REG.register(bus);
 		ModEntities.REG.register(bus);
+		BWSounds.REG.register(bus);
 	}
 	
 	public static ResourceLocation rl(String name) {
