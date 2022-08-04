@@ -144,6 +144,7 @@ public class BookWyrmEntity extends Animal {
 					digested -= enchLevel;
 					makeBook();
 				}
+				if (toDigest <= 0) setDigesting(false);
 			}
 		}
 	}
@@ -219,8 +220,7 @@ public class BookWyrmEntity extends Animal {
 		List<EnchantmentInstance> list = Lists.newArrayList();
 
 		for (Enchantment ench : ForgeRegistries.ENCHANTMENTS) {
-			// For now I'll take the choice of not allowing Soul Speed and Swift Sneak,
-			// might change
+			// For now I'll take the choice of not allowing Soul Speed and Swift Sneak, might change
 			if (ench.isDiscoverable() && ench.isAllowedOnBooks() && (treasure || !ench.isTreasureOnly()) && compatibleTesters(ench, testers)) {
 				for (int i = ench.getMaxLevel(); i > ench.getMinLevel() - 1; --i) {
 					if (enchatability >= ench.getMinCost(i) && enchatability <= ench.getMaxCost(i)) {
@@ -244,7 +244,6 @@ public class BookWyrmEntity extends Animal {
 		List<ItemStack> list = Lists.newArrayList();
 		if (tag == null) return list;
 
-		// The deprecation is not for our use
 		for (Item item : ForgeRegistries.ITEMS.tags().getTag(tag)) {
 			list.add(new ItemStack(item));
 		}
