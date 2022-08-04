@@ -23,5 +23,14 @@
 	"entity.bookwyrm.indigestion": {
 		"subtitle": "subtitles.bookwyrms.entity.bookwyrm.indigestion",
 		"sounds": [ { "name": "minecraft:random/burp", "pitch": 0.5 } ]
+	},
+	"item.wyrmutagen.use": {
+		"subtitle": "subtitles.bookwyrms.item.wyrmutagen.use",
+		"sounds": [
+			"item/dye/dye",
+			{ "name": "item/dye/dye", "pitch": 0.9 },
+			{ "name": "item/dye/dye", "pitch": 0.95 },
+			{ "name": "item/dye/dye", "pitch": 1.1 }
+		]
 	}
 }

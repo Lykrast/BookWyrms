@@ -3,9 +3,9 @@ package lykrast.bookwyrms.item;
 import java.util.List;
 
 import lykrast.bookwyrms.entity.BookWyrmEntity;
+import lykrast.bookwyrms.registry.BWSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -30,7 +30,7 @@ public abstract class WyrmutagenItem extends Item {
 				if (player.level.isClientSide) return InteractionResult.SUCCESS;
 				
 				if (canApply(stack, wyrm)) {
-					wyrm.level.playSound(player, wyrm, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1, 1);
+					wyrm.level.playSound(null, wyrm, BWSounds.mutagen.get(), SoundSource.PLAYERS, 1, 1);
 					applyMutagen(stack, wyrm);
 					if (!player.getAbilities().instabuild) stack.shrink(1);
 

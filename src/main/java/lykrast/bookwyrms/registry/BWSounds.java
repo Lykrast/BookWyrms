@@ -8,7 +8,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class BWSounds {
 	public static final DeferredRegister<SoundEvent> REG = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, BookWyrms.MODID);
-	public static RegistryObject<SoundEvent> wyrmIdle, wyrmHurt, wyrmDeath, wyrmBook, wyrmIndigestion;
+	public static RegistryObject<SoundEvent> wyrmIdle, wyrmHurt, wyrmDeath, wyrmBook, wyrmIndigestion, mutagen;
 
 	static {
 		wyrmIdle = initSound("entity.bookwyrm.idle");
@@ -16,6 +16,7 @@ public class BWSounds {
 		wyrmDeath = initSound("entity.bookwyrm.death");
 		wyrmBook = initSound("entity.bookwyrm.book");
 		wyrmIndigestion = initSound("entity.bookwyrm.indigestion");
+		mutagen = initSound("item.wyrmutagen.use");
 	}
 
 	public static RegistryObject<SoundEvent> initSound(String name) {

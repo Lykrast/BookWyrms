@@ -65,6 +65,7 @@
 	"subtitles.bookwyrms.entity.bookwyrm.death": "Book Wyrm dies",
 	"subtitles.bookwyrms.entity.bookwyrm.book": "Book Wyrm writes a book",
 	"subtitles.bookwyrms.entity.bookwyrm.indigestion": "Book Wyrm regurgitates",
+	"subtitles.bookwyrms.item.wyrmutagen.use": "Wyrmutagen applied",
 	
     "itemGroup.bookwyrms": "Book Wyrms"
 }
