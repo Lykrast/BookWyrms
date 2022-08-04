@@ -1,4 +1,7 @@
 {
-	"replace": false,
-	"values": []
+	"values": [
+		{ "id": "alexsmobs:straddleboard", "required": false },
+		{ "id": "domesticationinnovation:collar_tag", "required": false },
+		{ "id": "superiorshields:iron_shield", "required": false }
+	]
 }

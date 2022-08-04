@@ -1,7 +1,8 @@
 {
-	"replace": false,
 	"values": [
 		"minecraft:bow",
-		"minecraft:crossbow"
+		"minecraft:crossbow",
+		{ "id": "gunswithoutroses:iron_gun", "required": false },
+		{ "id": "create:potato_cannon", "required": false }
 	]
 }

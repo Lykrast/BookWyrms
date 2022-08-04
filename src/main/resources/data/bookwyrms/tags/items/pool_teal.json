@@ -1,7 +1,7 @@
 {
-	"replace": false,
 	"values": [
 		"minecraft:fishing_rod",
-		"minecraft:trident"
+		"minecraft:trident",
+		{ "id": "the_bumblezone:stinger_spear", "required": false }
 	]
 }
