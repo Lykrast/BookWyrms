@@ -52,9 +52,9 @@
 	"status.bookwyrms.analyze.level": "§9Enchanting level: §f%d§r",
 	"status.bookwyrms.analyze.speed": "§9Digesting speed: §f%d ticks per level§r",
 	"status.bookwyrms.analyze.indigest": "§9Indigestion chance: §f%d%%§r",
-	"status.bookwyrms.analyze.treasure": "§6Its eyes glow with power.§r",
+	"status.bookwyrms.analyze.treasure": "§6Its eyes glow with power§r",
 	"status.bookwyrms.analyze.digested": "§2Digested levels: §f%d§r",
-	"status.bookwyrms.analyze.todigest": "§2Digesting §f%d§2 levels.§r",
+	"status.bookwyrms.analyze.todigest": "§2Digesting §f%d§2 levels§r",
 	"status.bookwyrms.analyze.wyrmutagen": "§dActive Wyrmutagen: §r",
 	"status.bookwyrms.analyze.wyrmutagen2": "§dActive Wyrmutagens: §r",
 	

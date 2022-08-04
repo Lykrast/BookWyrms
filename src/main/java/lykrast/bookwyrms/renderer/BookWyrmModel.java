@@ -28,11 +28,12 @@ public class BookWyrmModel<T extends Entity> extends QuadrupedModel<T> {
 				PartPose.offset(0, 17, -6));
 		partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(32, 10).addBox(-5, -10, -2, 10, 16, 6),
 				PartPose.offsetAndRotation(0, 20, 3, ((float) Math.PI / 2F), 0.0F, 0.0F));
-		CubeListBuilder cubelistbuilder = CubeListBuilder.create().texOffs(0, 22).addBox(-2, 0, -2, 4, 6, 4);
-		partdefinition.addOrReplaceChild("right_hind_leg", cubelistbuilder, PartPose.offset(-7, 18, 7));
-		partdefinition.addOrReplaceChild("left_hind_leg", cubelistbuilder, PartPose.offset(7, 18, 7));
-		partdefinition.addOrReplaceChild("right_front_leg", cubelistbuilder, PartPose.offset(-7, 18, -5));
-		partdefinition.addOrReplaceChild("left_front_leg", cubelistbuilder, PartPose.offset(7, 18, -5));
+		CubeListBuilder leg = CubeListBuilder.create().texOffs(0, 22).addBox(-2, 0, -2, 4, 6, 4);
+		CubeListBuilder legMirrored = CubeListBuilder.create().texOffs(0, 22).mirror().addBox(-2, 0, -2, 4, 6, 4);
+		partdefinition.addOrReplaceChild("right_hind_leg", leg, PartPose.offset(-7, 18, 7));
+		partdefinition.addOrReplaceChild("left_hind_leg", legMirrored, PartPose.offset(7, 18, 7));
+		partdefinition.addOrReplaceChild("right_front_leg", leg, PartPose.offset(-7, 18, -5));
+		partdefinition.addOrReplaceChild("left_front_leg", legMirrored, PartPose.offset(7, 18, -5));
 		return LayerDefinition.create(meshdefinition, 64, 32);
 	}
 
