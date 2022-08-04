@@ -1,0 +1,9 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{ "item": "bookwyrms:wyrmutagen_base" },
+		{ "tag": "forge:ingots/iron" },
+		{ "tag": "forge:sand" }
+	],
+	"result": { "item": "bookwyrms:wyrmutagen_stasis" }
+}

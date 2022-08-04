@@ -1,0 +1,8 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{ "item": "bookwyrms:wyrmutagen_base" },
+		{ "item": "bookwyrms:scale_teal" }
+	],
+	"result": { "item": "bookwyrms:wyrmutagen_teal" }
+}

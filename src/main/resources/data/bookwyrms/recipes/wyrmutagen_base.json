@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{ "item": "bookwyrms:chad_bolus" },
+		{ "tag": "forge:crops/nether_wart" },
+		{ "item": "minecraft:blaze_powder" },
+		{ "tag": "forge:slimeballs" }
+	],
+	"result": { "item": "bookwyrms:wyrmutagen_base", "count": 4 }
+}

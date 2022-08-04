@@ -1,0 +1,9 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{ "item": "bookwyrms:wyrmutagen_base" },
+		{ "item": "minecraft:glistering_melon_slice" },
+		{ "tag": "forge:dusts/glowstone" }
+	],
+	"result": { "item": "bookwyrms:wyrmutagen_speed_up" }
+}
