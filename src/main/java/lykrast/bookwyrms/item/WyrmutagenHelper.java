@@ -22,10 +22,6 @@ public class WyrmutagenHelper {
 			};
 	public static final int LVL_UP = 0, LVL_DOWN = 1, SPEED_UP = 2, SPEED_DOWN = 3, DIGESTION_UP = 4, DIGESTION_DOWN = 5, STASIS = 6;
 	
-	// TODO Config?
-	public static final int LVL_CHANGE = 8, SPEED_CHANGE = 60;
-	public static final double DIGESTION_CHANGE = 0.1;
-	
 	@SuppressWarnings("unchecked")
 	public static String colorName(int color) {
 		return ((RegistryObject<Item>)COLORS[color]).get().getDescriptionId();

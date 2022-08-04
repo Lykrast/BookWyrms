@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 
 import lykrast.bookwyrms.BookWyrms;
+import lykrast.bookwyrms.config.ConfigValues;
 import lykrast.bookwyrms.item.WyrmutagenHelper;
 import lykrast.bookwyrms.registry.BWSounds;
 import lykrast.bookwyrms.registry.BWEntities;
@@ -220,8 +221,8 @@ public class BookWyrmEntity extends Animal {
 		List<EnchantmentInstance> list = Lists.newArrayList();
 
 		for (Enchantment ench : ForgeRegistries.ENCHANTMENTS) {
-			// For now I'll take the choice of not allowing Soul Speed and Swift Sneak, might change
-			if (ench.isDiscoverable() && ench.isAllowedOnBooks() && (treasure || !ench.isTreasureOnly()) && compatibleTesters(ench, testers)) {
+			// TODO Apotheosis when it ports
+			if (ench.isAllowedOnBooks() && (treasure || !ench.isTreasureOnly()) && (ench.isDiscoverable() || (treasure && ConfigValues.ALLOW_UNDISCOVERABLE)) && compatibleTesters(ench, testers)) {
 				for (int i = ench.getMaxLevel(); i > ench.getMinLevel() - 1; --i) {
 					if (enchatability >= ench.getMinCost(i) && enchatability <= ench.getMaxCost(i)) {
 						list.add(new EnchantmentInstance(ench, i));
@@ -258,7 +259,7 @@ public class BookWyrmEntity extends Animal {
 		int total = 0;
 
 		for (var e : EnchantmentHelper.getEnchantments(stack).entrySet()) {
-			// TODO Apotheosis check
+			// TODO Apotheosis when it ports
 			total += e.getKey().getMinCost(e.getValue());
 		}
 
@@ -288,19 +289,18 @@ public class BookWyrmEntity extends Animal {
 		wyrm.setTreasure(rand.nextInt(100) == 0);
 
 		// Normal genes have 33% to be "outstanding"
-		// Level, wild is 3-7 on a bellish curve, 8-12 for outstanding
-		wyrm.enchLevel = 3 + rand.nextIntBetweenInclusive(0, 2) + rand.nextIntBetweenInclusive(0, 2);
-		if (rand.nextInt(3) == 0) wyrm.enchLevel += 5;
-		// Digesting speed, 200-300, 133-200 for outstanding
-		wyrm.digestSpeed = 200 + rand.nextIntBetweenInclusive(0, 50) + rand.nextIntBetweenInclusive(0, 50);
-		if (rand.nextInt(3) == 0) wyrm.digestSpeed = (wyrm.digestSpeed * 2) / 3;
-		// Indigestion chance is 1-9%, outstanding 50-70
-		if (rand.nextInt(3) == 0) wyrm.indigestChance = 0.5 + rand.nextDouble() * 0.1 + rand.nextDouble() * 0.1;
-		else wyrm.indigestChance = 0.01 + rand.nextDouble() * 0.04 + rand.nextDouble() * 0.04;
+		// Level
+		if (rand.nextInt(3) == 0) wyrm.enchLevel =  ConfigValues.WILDRARE_LEVEL_BASE + rand.nextIntBetweenInclusive(0, ConfigValues.WILDRARE_LEVEL_INC) + rand.nextIntBetweenInclusive(0, ConfigValues.WILDRARE_LEVEL_INC);
+		else wyrm.enchLevel = ConfigValues.WILD_LEVEL_BASE + rand.nextIntBetweenInclusive(0, ConfigValues.WILD_LEVEL_INC) + rand.nextIntBetweenInclusive(0, ConfigValues.WILD_LEVEL_INC);
+		// Digesting speed
+		if (rand.nextInt(3) == 0) wyrm.digestSpeed = ConfigValues.WILDRARE_SPEED_BASE + rand.nextIntBetweenInclusive(0, ConfigValues.WILDRARE_SPEED_INC) + rand.nextIntBetweenInclusive(0, ConfigValues.WILDRARE_SPEED_INC);
+		else wyrm.digestSpeed = ConfigValues.WILD_SPEED_BASE + rand.nextIntBetweenInclusive(0, ConfigValues.WILD_SPEED_INC) + rand.nextIntBetweenInclusive(0, ConfigValues.WILD_SPEED_INC);
+		// Indigestion chance
+		if (rand.nextInt(3) == 0) wyrm.indigestChance = ConfigValues.WILDRARE_INDIGEST_BASE + rand.nextDouble() * ConfigValues.WILDRARE_INDIGEST_INC + rand.nextDouble() * ConfigValues.WILDRARE_INDIGEST_INC;
+		else wyrm.indigestChance = ConfigValues.WILD_INDIGEST_BASE + rand.nextDouble() * ConfigValues.WILD_INDIGEST_INC + rand.nextDouble() * ConfigValues.WILD_INDIGEST_INC;
+		
+		wyrm.clampGenes();
 	}
-
-	// TODO Config?
-	public static final int MIN_LEVEL = 3, MAX_LEVEL = 50, MIN_SPEED = 1, MAX_SPEED = 600;
 
 	public static void mixGenes(BookWyrmEntity a, BookWyrmEntity b, BookWyrmEntity child, RandomSource rand) {
 		// Type
@@ -349,20 +349,21 @@ public class BookWyrmEntity extends Animal {
 			// Level
 			int min = Math.min(a.enchLevel, b.enchLevel);
 			int max = Math.max(a.enchLevel, b.enchLevel);
-			if (min == MAX_LEVEL && max == MAX_LEVEL) child.enchLevel = MAX_LEVEL;
-			else child.enchLevel = rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 6) - 3;
+			if (min == ConfigValues.MAX_LEVEL && max == ConfigValues.MAX_LEVEL) child.enchLevel = ConfigValues.MAX_LEVEL;
+			else child.enchLevel = rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, ConfigValues.VARIANCE_LEVEL*2) - ConfigValues.VARIANCE_LEVEL;
 			// Speed
 			min = Math.min(a.digestSpeed, b.digestSpeed);
 			max = Math.max(a.digestSpeed, b.digestSpeed);
-			if (min == MIN_SPEED && max == MIN_SPEED) child.digestSpeed = MIN_SPEED;
-			else child.digestSpeed = rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, 40) - 20;
-			// Digestion, cap on both ways cause maybe someone wants 100% to farm chad I
-			// won't judge
+			if (min == ConfigValues.MIN_SPEED && max == ConfigValues.MIN_SPEED) child.digestSpeed = ConfigValues.MIN_SPEED;
+			else child.digestSpeed = rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, ConfigValues.VARIANCE_SPEED*2) - ConfigValues.VARIANCE_SPEED;
+			// Digestion, cap on both ways cause maybe someone wants 100% to farm chad I won't judge
 			double min2 = Math.min(a.indigestChance, b.indigestChance);
 			double max2 = Math.max(a.indigestChance, b.indigestChance);
-			if (min2 < 0.01 && max2 < 0.01) child.indigestChance = 0;
-			else if (min2 > 0.99 && max2 > 0.99) child.indigestChance = 1;
-			else child.indigestChance = min2 + rand.nextDouble() * (max2 - min2) + rand.nextDouble() * 0.06 - 0.03;
+			// Because we clamp stuff, MIN should be always lower than the wyrm's values
+			if (min2 - ConfigValues.MIN_INDIGEST < 0.01 && max2 - ConfigValues.MIN_INDIGEST < 0.01) child.indigestChance = ConfigValues.MIN_INDIGEST;
+			// Because we clamp stuff, MAX should be always higher than the wyrm's values
+			else if (ConfigValues.MAX_INDIGEST - min2 < 0.01 && ConfigValues.MAX_INDIGEST - max2 < 0.01) child.indigestChance = ConfigValues.MAX_INDIGEST;
+			else child.indigestChance = min2 + rand.nextDouble() * (max2 - min2) + rand.nextDouble() * ConfigValues.VARIANCE_INDIGEST*2 - ConfigValues.VARIANCE_INDIGEST;
 		}
 		
 		if (a.hasMutagenStat() && child.mutateStats(a.getMutagenStat())) a.clearMutagenStat();		
@@ -378,31 +379,31 @@ public class BookWyrmEntity extends Animal {
 	}
 	
 	private void clampGenes() {
-		enchLevel = Mth.clamp(enchLevel, MIN_LEVEL, MAX_LEVEL);
-		digestSpeed = Mth.clamp(digestSpeed, MIN_SPEED, MAX_SPEED);
-		indigestChance = Mth.clamp(indigestChance, 0, 1);
+		enchLevel = Mth.clamp(enchLevel, ConfigValues.MIN_LEVEL, ConfigValues.MAX_LEVEL);
+		digestSpeed = Mth.clamp(digestSpeed, ConfigValues.MIN_SPEED, ConfigValues.MAX_SPEED);
+		indigestChance = Mth.clamp(indigestChance, ConfigValues.MIN_INDIGEST, ConfigValues.MAX_INDIGEST);
 	}
 	
 	private boolean mutateStats(int mutagen) {
 		//True if some changes were made and we need to consume it
 		switch (mutagen) {
 			case WyrmutagenHelper.LVL_UP:
-				enchLevel += WyrmutagenHelper.LVL_CHANGE;
+				enchLevel += ConfigValues.MUTAGEN_LEVEL;
 				return true;
 			case WyrmutagenHelper.LVL_DOWN:
-				enchLevel -= WyrmutagenHelper.LVL_CHANGE;
+				enchLevel -= ConfigValues.MUTAGEN_LEVEL;
 				return true;
 			case WyrmutagenHelper.SPEED_UP:
-				digestSpeed -= WyrmutagenHelper.SPEED_CHANGE;
+				digestSpeed -= ConfigValues.MUTAGEN_SPEED;
 				return true;
 			case WyrmutagenHelper.SPEED_DOWN:
-				digestSpeed += WyrmutagenHelper.SPEED_CHANGE;
+				digestSpeed += ConfigValues.MUTAGEN_SPEED;
 				return true;
 			case WyrmutagenHelper.DIGESTION_UP:
-				indigestChance -= WyrmutagenHelper.DIGESTION_CHANGE;
+				indigestChance -= ConfigValues.MUTAGEN_INDIGEST;
 				return true;
 			case WyrmutagenHelper.DIGESTION_DOWN:
-				indigestChance += WyrmutagenHelper.DIGESTION_CHANGE;
+				indigestChance += ConfigValues.MUTAGEN_INDIGEST;
 				return true;
 		}
 		return false;
