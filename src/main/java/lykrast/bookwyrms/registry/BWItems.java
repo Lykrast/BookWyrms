@@ -14,7 +14,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class ModItems {
+public class BWItems {
 	public static RegistryObject<Item> analyzer;
 	public static RegistryObject<Item> bookWyrmRaw, bookWyrmCooked, chadBolus, chadBolusSus, chadPie;
 	public static RegistryObject<Item> scaleGrey, scaleRed, scaleOrange, scaleGreen, scaleBlue, scaleTeal, scalePurple;
@@ -56,7 +56,7 @@ public class ModItems {
 		mutagenDgsDown = initItem("wyrmutagen_digestion_down", () -> new WyrmutagenStat(WyrmutagenHelper.DIGESTION_DOWN, defP()));
 		mutagenStasis = initItem("wyrmutagen_stasis", () -> new WyrmutagenStat(WyrmutagenHelper.STASIS, defP()));
 		
-		spawnEgg = initItem("book_wyrm_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.bookWyrm, 0x3D8DC6, 0xFFF9E0, defP()));
+		spawnEgg = initItem("book_wyrm_spawn_egg", () -> new ForgeSpawnEggItem(BWEntities.bookWyrm, 0x3D8DC6, 0xFFF9E0, defP()));
 	}
 
 	public static Item.Properties defP() {

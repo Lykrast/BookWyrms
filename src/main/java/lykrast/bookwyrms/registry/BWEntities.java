@@ -12,7 +12,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = BookWyrms.MODID)
-public class ModEntities {
+public class BWEntities {
 	public static RegistryObject<EntityType<BookWyrmEntity>> bookWyrm;
 	public static final DeferredRegister<EntityType<?>> REG = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, BookWyrms.MODID);
 

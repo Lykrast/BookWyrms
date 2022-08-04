@@ -1,8 +1,8 @@
 package lykrast.bookwyrms;
 
 import lykrast.bookwyrms.registry.BWSounds;
-import lykrast.bookwyrms.registry.ModEntities;
-import lykrast.bookwyrms.registry.ModItems;
+import lykrast.bookwyrms.registry.BWEntities;
+import lykrast.bookwyrms.registry.BWItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -15,8 +15,8 @@ public class BookWyrms {
 	
 	public BookWyrms() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-		ModItems.REG.register(bus);
-		ModEntities.REG.register(bus);
+		BWItems.REG.register(bus);
+		BWEntities.REG.register(bus);
 		BWSounds.REG.register(bus);
 	}
 	

@@ -11,8 +11,8 @@ import com.google.common.collect.Lists;
 import lykrast.bookwyrms.BookWyrms;
 import lykrast.bookwyrms.item.WyrmutagenHelper;
 import lykrast.bookwyrms.registry.BWSounds;
-import lykrast.bookwyrms.registry.ModEntities;
-import lykrast.bookwyrms.registry.ModItems;
+import lykrast.bookwyrms.registry.BWEntities;
+import lykrast.bookwyrms.registry.BWItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -108,11 +108,11 @@ public class BookWyrmEntity extends Animal {
 	public InteractionResult mobInteract(Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 		if (level.isClientSide) {
-			if (!isBaby() && (stack.is(Items.ENCHANTED_BOOK) || stack.is(ModItems.chadBolus.get()))) return InteractionResult.CONSUME;
+			if (!isBaby() && (stack.is(Items.ENCHANTED_BOOK) || stack.is(BWItems.chadBolus.get()))) return InteractionResult.CONSUME;
 			else return InteractionResult.PASS;
 		}
 		else {
-			if (!isBaby() && (stack.is(Items.ENCHANTED_BOOK) || stack.is(ModItems.chadBolus.get()))) {
+			if (!isBaby() && (stack.is(Items.ENCHANTED_BOOK) || stack.is(BWItems.chadBolus.get()))) {
 				// Eat enchanted book
 				toDigest += getBookValue(stack);
 				if (digestTimer <= 0) digestTimer = digestSpeed;
@@ -157,7 +157,7 @@ public class BookWyrmEntity extends Animal {
 		ItemStack stack;
 		// Indigestion
 		if (random.nextDouble() < indigestChance) {
-			stack = new ItemStack(ModItems.chadBolus.get(), random.nextIntBetweenInclusive(1, enchLevel));
+			stack = new ItemStack(BWItems.chadBolus.get(), random.nextIntBetweenInclusive(1, enchLevel));
 			playSound(BWSounds.wyrmIndigestion.get(), 1, 1);
 		}
 		else {
@@ -166,7 +166,7 @@ public class BookWyrmEntity extends Animal {
 			List<EnchantmentInstance> ench = selectEnchantments(random, (TagKey<Item>) POOLS[getWyrmType()], enchLevel, isTreasure());
 			if (ench.isEmpty()) {
 				//No valid enchant, give the error message
-				stack = new ItemStack(ModItems.chadBolusSus.get(), enchLevel);
+				stack = new ItemStack(BWItems.chadBolusSus.get(), enchLevel);
 				playSound(BWSounds.wyrmIndigestion.get(), 1, 1);
 			}
 			else {
@@ -254,7 +254,7 @@ public class BookWyrmEntity extends Animal {
 
 	public static int getBookValue(ItemStack stack) {
 		// Bolus is 1
-		if (stack.is(ModItems.chadBolus.get())) return 1;
+		if (stack.is(BWItems.chadBolus.get())) return 1;
 		// Sums the value of all enchants on the item, assuming it is a book
 		int total = 0;
 
@@ -268,7 +268,7 @@ public class BookWyrmEntity extends Animal {
 
 	@Override
 	public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob mate) {
-		BookWyrmEntity child = ModEntities.bookWyrm.get().create(world);
+		BookWyrmEntity child = BWEntities.bookWyrm.get().create(world);
 		// If somehow the other breeder isn't a book wyrm, take the sole wyrm parent's genes
 		mixGenes(this, mate instanceof BookWyrmEntity ? (BookWyrmEntity) mate : this, child, random);
 		return child;

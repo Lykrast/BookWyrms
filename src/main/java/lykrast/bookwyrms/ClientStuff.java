@@ -1,6 +1,6 @@
 package lykrast.bookwyrms;
 
-import lykrast.bookwyrms.registry.ModEntities;
+import lykrast.bookwyrms.registry.BWEntities;
 import lykrast.bookwyrms.renderer.BookWyrmModel;
 import lykrast.bookwyrms.renderer.BookWyrmRenderer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -14,7 +14,7 @@ public class ClientStuff {
     @SubscribeEvent
     public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
 		//Entities
-    	event.registerEntityRenderer(ModEntities.bookWyrm.get(), (context) -> new BookWyrmRenderer(context));
+    	event.registerEntityRenderer(BWEntities.bookWyrm.get(), (context) -> new BookWyrmRenderer(context));
     }
     
     @SubscribeEvent

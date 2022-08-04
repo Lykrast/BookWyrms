@@ -12,7 +12,7 @@ public class ItemGroupBookWyrms extends CreativeModeTab {
 
 	@Override
 	public ItemStack makeIcon() {
-		return new ItemStack(ModItems.bookWyrmCooked.get());
+		return new ItemStack(BWItems.bookWyrmCooked.get());
 	}
 
 }

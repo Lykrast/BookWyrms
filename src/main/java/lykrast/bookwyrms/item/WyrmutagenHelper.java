@@ -1,24 +1,24 @@
 package lykrast.bookwyrms.item;
 
-import lykrast.bookwyrms.registry.ModItems;
+import lykrast.bookwyrms.registry.BWItems;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.RegistryObject;
 
 public class WyrmutagenHelper {
 	private static final RegistryObject<?>[] COLORS = {
-			ModItems.mutagenGrey, ModItems.mutagenRed, 
-			ModItems.mutagenOrange, ModItems.mutagenGreen, 
-			ModItems.mutagenBlue, ModItems.mutagenTeal, ModItems.mutagenPurple
+			BWItems.mutagenGrey, BWItems.mutagenRed, 
+			BWItems.mutagenOrange, BWItems.mutagenGreen, 
+			BWItems.mutagenBlue, BWItems.mutagenTeal, BWItems.mutagenPurple
 			};
 	//0 = level up, 1 = level down
 	//2 = speed up, 3 = leaving open a speed down and putting Base as a placeholder
 	//4 = digestion up, 5 = digestion down
 	//6 = stasis
 	private static final RegistryObject<?>[] STATS = {
-			ModItems.mutagenLvlUp, ModItems.mutagenLvlDn, 
-			ModItems.mutagenSpdUp, ModItems.mutagenBase, 
-			ModItems.mutagenDgsUp, ModItems.mutagenDgsDown,
-			ModItems.mutagenStasis
+			BWItems.mutagenLvlUp, BWItems.mutagenLvlDn, 
+			BWItems.mutagenSpdUp, BWItems.mutagenBase, 
+			BWItems.mutagenDgsUp, BWItems.mutagenDgsDown,
+			BWItems.mutagenStasis
 			};
 	public static final int LVL_UP = 0, LVL_DOWN = 1, SPEED_UP = 2, SPEED_DOWN = 3, DIGESTION_UP = 4, DIGESTION_DOWN = 5, STASIS = 6;
 	
