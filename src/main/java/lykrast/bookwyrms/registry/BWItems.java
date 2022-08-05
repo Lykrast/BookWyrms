@@ -24,6 +24,8 @@ public class BWItems {
 	public static final DeferredRegister<Item> REG = DeferredRegister.create(ForgeRegistries.ITEMS, BookWyrms.MODID);
 
 	static {
+		//Put those at the start of the creative tab since they're the most likely things to be wanted
+		spawnEgg = initItem("book_wyrm_spawn_egg", () -> new ForgeSpawnEggItem(BWEntities.bookWyrm, 0x808080, 0xFFF9E0, defP()));
 		analyzer = initItem("analyzer", () -> new AnalyzerItem(defP().stacksTo(1)));
 		
 		bookWyrmRaw = initItem("book_wyrm_raw", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(3).saturationMod(0.3f).meat().build())));
@@ -55,8 +57,6 @@ public class BWItems {
 		mutagenDgsUp = initItem("wyrmutagen_digestion_up", () -> new WyrmutagenStat(WyrmutagenHelper.DIGESTION_UP, defP()));
 		mutagenDgsDown = initItem("wyrmutagen_digestion_down", () -> new WyrmutagenStat(WyrmutagenHelper.DIGESTION_DOWN, defP()));
 		mutagenStasis = initItem("wyrmutagen_stasis", () -> new WyrmutagenStat(WyrmutagenHelper.STASIS, defP()));
-		
-		spawnEgg = initItem("book_wyrm_spawn_egg", () -> new ForgeSpawnEggItem(BWEntities.bookWyrm, 0x3D8DC6, 0xFFF9E0, defP()));
 	}
 
 	public static Item.Properties defP() {
