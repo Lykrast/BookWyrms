@@ -4,8 +4,8 @@
 	"spawners":
 	{
 		"type": "bookwyrms:book_wyrm",
-		"weight": 3,
-		"minCount": 2,
-		"maxCount": 5
+		"weight": 4,
+		"minCount": 3,
+		"maxCount": 6
 	}
 }
