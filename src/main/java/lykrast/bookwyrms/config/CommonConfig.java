@@ -33,7 +33,7 @@ public class CommonConfig {
 		builder.comment("Absolute caps for the wyrm genes");
 		builder.push("caps");
 		enchLvlMin = intval(builder, "enchLvlMin", 3, 1, Short.MAX_VALUE, "Minimum enchanting level a wyrm can have", "Very low values can allow getting massive quantities of Sharpness/Efficiency/Power I");
-		enchLvlMax = intval(builder, "enchLvlMax", 50, 1, Short.MAX_VALUE, "Maximum enchanting level a wyrm can have", "Very high values will result in no enchantments being available (unless Apotheosis for example)");
+		enchLvlMax = intval(builder, "enchLvlMax", 50, 1, Short.MAX_VALUE, "Maximum enchanting level a wyrm can have", "Very high values will result in no enchantments being available (unless Apotheosis or you enable ignoreMaxCost)");
 		digestSpeedMin = intval(builder, "digestSpeedMin", 1, 1, Short.MAX_VALUE, "Fastest digesting speed (in ticks per level) a wyrm can have");
 		digestSpeedMax = intval(builder, "digestSpeedMax", 600, 1, Short.MAX_VALUE, "Slowest digesting speed (in ticks per level) a wyrm can have");
 		indigestMin = doubleval(builder, "indigestMin", 0, 0, 1, "Lowest indigestion chance (0 = 0%, 1 = 100%) a wyrm can have");
