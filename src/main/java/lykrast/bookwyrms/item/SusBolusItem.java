@@ -2,6 +2,7 @@ package lykrast.bookwyrms.item;
 
 import java.util.List;
 
+import lykrast.bookwyrms.config.ConfigValues;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -17,8 +18,13 @@ public class SusBolusItem extends Item {
 
 	@Override
 	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flags) {
-		tooltip.add(Component.translatable(getDescriptionId() + ".desc1").withStyle(ChatFormatting.RED));
-		tooltip.add(Component.translatable(getDescriptionId() + ".desc2").withStyle(ChatFormatting.RED));
+		if (ConfigValues.DISABLE_SUS_WARNING) {
+			tooltip.add(Component.translatable(getDescriptionId() + ".desc1").withStyle(ChatFormatting.GRAY));
+		}
+		else {
+			tooltip.add(Component.translatable(getDescriptionId() + ".desc1").withStyle(ChatFormatting.RED));
+			tooltip.add(Component.translatable(getDescriptionId() + ".desc2").withStyle(ChatFormatting.RED));
+		}
 		tooltip.add(Component.translatable(getDescriptionId() + ".desc3").withStyle(ChatFormatting.GRAY));
 	}
 

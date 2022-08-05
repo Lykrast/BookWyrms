@@ -17,7 +17,7 @@ public class ConfigValues {
 	public static int MUTAGEN_LEVEL = 8, MUTAGEN_SPEED = 60;
 	public static double MUTAGEN_INDIGEST = 0.1;
 	
-	public static boolean ALLOW_UNDISCOVERABLE = false;
+	public static boolean ALLOW_UNDISCOVERABLE = false, DISABLE_SUS_WARNING = false, DISABLE_COLOR = false;
 	
 	public static void refresh(ModConfig config) {
 		//I'm probably supposed to actually impose constraints here, but eeeeh
@@ -64,5 +64,7 @@ public class ConfigValues {
 		MUTAGEN_SPEED = ConfigHolder.COMMON.digestMutagen.get();
 		MUTAGEN_INDIGEST = ConfigHolder.COMMON.indigestMutagen.get();
 		ALLOW_UNDISCOVERABLE = ConfigHolder.COMMON.allowUndiscoverable.get();
+		DISABLE_SUS_WARNING = ConfigHolder.COMMON.disableSusWarning.get();
+		DISABLE_COLOR = ConfigHolder.COMMON.disableColoredPools.get();
 	}
 }

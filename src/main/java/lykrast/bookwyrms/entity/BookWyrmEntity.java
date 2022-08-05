@@ -165,7 +165,7 @@ public class BookWyrmEntity extends Animal {
 		else {
 			//Based on EnchantmentHelper.enchantItem
 			@SuppressWarnings("unchecked")
-			List<EnchantmentInstance> ench = selectEnchantments(random, (TagKey<Item>) POOLS[getWyrmType()], enchLevel, isTreasure());
+			List<EnchantmentInstance> ench = selectEnchantments(random, ConfigValues.DISABLE_COLOR ? null : (TagKey<Item>) POOLS[getWyrmType()], enchLevel, isTreasure());
 			if (ench.isEmpty()) {
 				//No valid enchant, give the error message
 				stack = new ItemStack(BWItems.chadBolusSus.get(), enchLevel);

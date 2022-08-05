@@ -6,6 +6,7 @@ import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
 public class CommonConfig {
+	public final BooleanValue allowUndiscoverable, disableSusWarning, disableColoredPools;
 	public final IntValue enchLvlMin, enchLvlMax, digestSpeedMin, digestSpeedMax;
 	public final DoubleValue indigestMin, indigestMax;
 	public final IntValue enchLvlWildMin, enchLvlWildMax, enchLvlWildRareMin, enchLvlWildRareMax, digestSpeedWildMin, digestSpeedWildMax, digestSpeedWildRareMin, digestSpeedWildRareMax;
@@ -14,12 +15,15 @@ public class CommonConfig {
 	public final DoubleValue indigestBreedVariance;
 	public final IntValue enchLvlMutagen, digestMutagen;
 	public final DoubleValue indigestMutagen;
-	public final BooleanValue allowUndiscoverable;
 	
 	public CommonConfig(ForgeConfigSpec.Builder builder) {
 		builder.comment("Book recycling config");
 		builder.push("enchanting");
 		allowUndiscoverable = boolval(builder, "allowUndiscoverable", false, "Allow gold-eyed wyrms to also produce undiscoverable treasure enchants (in vanilla it's just Soul Speed and Swift Sneak)");
+		disableSusWarning = boolval(builder, "disableSusWarning", false, "Makes the warning on Suspicious Chad Bolus less intrusive and don't tell people to report it to the modpack",
+				"It appears when a given color and enchantment level have zero valid enchantments, which shouldn't happen in vanilla but may happen with configured values or unlucky mod compat",
+				"For example I know it happens if the Alex's Mobs Straddleboard is the only item in the purple pool and the level is below 12");
+		disableColoredPools = boolval(builder, "disableColoredPools", false, "Makes all Book Wyrms have all enchantments in their pool, making color purely cosmetic", "Same behavior as emptying all the pool tags");
 		builder.pop();
 		builder.comment("Wyrm stats config");
 		builder.push("genes");
