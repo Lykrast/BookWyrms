@@ -186,6 +186,7 @@ public class BookWyrmEntity extends Animal {
 	private static List<EnchantmentInstance> selectEnchantments(RandomSource rand, @Nullable TagKey<Item> testers, int enchantability, boolean treasure) {
 		List<EnchantmentInstance> list = Lists.newArrayList();
 		List<EnchantmentInstance> enchants = getValidEnchantments(getTestersFromTag(testers), enchantability, treasure);
+		if (enchants.isEmpty() && testers != null && ConfigValues.FALLBACK) enchants = getValidEnchantments(getTestersFromTag(null), enchantability, treasure);
 		if (!enchants.isEmpty()) {
 			EnchantmentInstance added = WeightedRandom.getRandomItem(rand, enchants).orElse(null);
 			if (added == null) return list;
@@ -224,7 +225,7 @@ public class BookWyrmEntity extends Animal {
 			// TODO Apotheosis when it ports
 			if (ench.isAllowedOnBooks() && (treasure || !ench.isTreasureOnly()) && (ench.isDiscoverable() || (treasure && ConfigValues.ALLOW_UNDISCOVERABLE)) && compatibleTesters(ench, testers)) {
 				for (int i = ench.getMaxLevel(); i > ench.getMinLevel() - 1; --i) {
-					if (enchatability >= ench.getMinCost(i) && enchatability <= ench.getMaxCost(i)) {
+					if (enchatability >= ench.getMinCost(i) && (enchatability <= ench.getMaxCost(i) || ConfigValues.IGNORE_MAX)) {
 						list.add(new EnchantmentInstance(ench, i));
 						break;
 					}

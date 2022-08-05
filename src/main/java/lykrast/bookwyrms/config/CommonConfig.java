@@ -6,7 +6,7 @@ import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
 public class CommonConfig {
-	public final BooleanValue allowUndiscoverable, disableSusWarning, disableColoredPools;
+	public final BooleanValue allowUndiscoverable, disableSusWarning, disableColoredPools, fallbackOnGlobal, ignoreMaxCost;
 	public final IntValue enchLvlMin, enchLvlMax, digestSpeedMin, digestSpeedMax;
 	public final DoubleValue indigestMin, indigestMax;
 	public final IntValue enchLvlWildMin, enchLvlWildMax, enchLvlWildRareMin, enchLvlWildRareMax, digestSpeedWildMin, digestSpeedWildMax, digestSpeedWildRareMin, digestSpeedWildRareMax;
@@ -24,6 +24,9 @@ public class CommonConfig {
 				"It appears when a given color and enchantment level have zero valid enchantments, which shouldn't happen in vanilla but may happen with configured values or unlucky mod compat",
 				"For example I know it happens if the Alex's Mobs Straddleboard is the only item in the purple pool and the level is below 12");
 		disableColoredPools = boolval(builder, "disableColoredPools", false, "Makes all Book Wyrms have all enchantments in their pool, making color purely cosmetic", "Same behavior as emptying all the pool tags");
+		fallbackOnGlobal = boolval(builder, "fallbackOnGlobal", false, "Fall back on the global/gray enchantment pool if a colored wyrm has no matching enchantment (and would make suspicious bolus)");
+		ignoreMaxCost = boolval(builder, "ignoreMaxCost", false, "Ignore upper level caps on enchantments, allowing wyrms to always make enchantments if they clear the lower cap",
+				"For example Feather Falling IV has level range 23-29, meaning a lvl 30+ wyrm can never get it, enabling this would treat it as 23-9999999999 basically");
 		builder.pop();
 		builder.comment("Wyrm stats config");
 		builder.push("genes");
