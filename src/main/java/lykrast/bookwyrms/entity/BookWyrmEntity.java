@@ -108,20 +108,16 @@ public class BookWyrmEntity extends Animal {
 	@Override
 	public InteractionResult mobInteract(Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
-		if (level.isClientSide) {
-			if (!isBaby() && (stack.is(Items.ENCHANTED_BOOK) || stack.is(BWItems.chadBolus.get()))) return InteractionResult.CONSUME;
-			else return InteractionResult.PASS;
-		}
-		else {
-			if (!isBaby() && (stack.is(Items.ENCHANTED_BOOK) || stack.is(BWItems.chadBolus.get()))) {
-				// Eat enchanted book
-				toDigest += getBookValue(stack);
-				if (digestTimer <= 0) digestTimer = digestSpeed;
-				setDigesting(true);
+		if (!isBaby() && (stack.is(Items.ENCHANTED_BOOK) || stack.is(BWItems.chadBolus.get()))) {
+			if (level.isClientSide) return InteractionResult.SUCCESS;
+			// Eat enchanted book
+			toDigest += getBookValue(stack);
+			if (digestTimer <= 0) digestTimer = digestSpeed;
+			setDigesting(true);
 
-				if (!player.getAbilities().instabuild) stack.shrink(1);
-				playSound(SoundEvents.GENERIC_EAT, 1, 1);
-			}
+			if (!player.getAbilities().instabuild) stack.shrink(1);
+			playSound(SoundEvents.GENERIC_EAT, 1, 1);
+			return InteractionResult.CONSUME;
 		}
 		return super.mobInteract(player, hand);
 	}
