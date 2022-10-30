@@ -92,10 +92,10 @@ public class BookWyrmEntity extends Animal {
 	@Override
 	protected void registerGoals() {
 		goalSelector.addGoal(0, new FloatGoal(this));
-		goalSelector.addGoal(1, new PanicGoal(this, 2));
+		goalSelector.addGoal(1, new PanicGoal(this, 1.3));
 		goalSelector.addGoal(2, new BreedGoal(this, 1));
-		goalSelector.addGoal(3, new TemptGoal(this, 1.25, Ingredient.of(Items.BOOK, Items.ENCHANTED_BOOK), false));
-		goalSelector.addGoal(4, new FollowParentGoal(this, 1.25));
+		goalSelector.addGoal(3, new TemptGoal(this, 1.2, Ingredient.of(Items.BOOK, Items.ENCHANTED_BOOK), false));
+		goalSelector.addGoal(4, new FollowParentGoal(this, 1.2));
 		goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1));
 		goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6f));
 		goalSelector.addGoal(7, new RandomLookAroundGoal(this));
