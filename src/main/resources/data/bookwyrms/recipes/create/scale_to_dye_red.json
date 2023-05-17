@@ -1,0 +1,7 @@
+{
+	"type": "create:milling",
+	"conditions": [{ "type": "forge:mod_loaded", "modid": "create" }],
+	"ingredients": [{ "item": "bookwyrms:scale_red" }],
+	"results": [{ "item": "minecraft:red_dye", "count": 2 }],
+	"processingTime": 50
+}
