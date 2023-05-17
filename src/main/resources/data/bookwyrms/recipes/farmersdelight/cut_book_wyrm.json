@@ -1,0 +1,7 @@
+{
+	"type": "farmersdelight:cutting",
+	"conditions": [{ "type": "forge:mod_loaded", "modid": "farmersdelight" }],
+	"ingredients": [{ "item": "bookwyrms:book_wyrm_raw" }],
+	"result": [{ "item": "bookwyrms:book_wyrm_slice_raw", "count": 2 }],
+	"tool": { "tag": "forge:tools/knives" }
+}

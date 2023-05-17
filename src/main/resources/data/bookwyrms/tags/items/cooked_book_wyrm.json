@@ -1,0 +1,6 @@
+{
+	"values": [
+		"bookwyrms:book_wyrm_cooked",
+		{ "id": "bookwyrms:book_wyrm_slice_cooked", "required": false }
+	]
+}

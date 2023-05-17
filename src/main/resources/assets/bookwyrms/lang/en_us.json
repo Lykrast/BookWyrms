@@ -1,6 +1,8 @@
 {
 	"item.bookwyrms.book_wyrm_raw": "Raw Book Wyrm",
 	"item.bookwyrms.book_wyrm_cooked": "Cooked Book Wyrm",
+	"item.bookwyrms.book_wyrm_slice_raw": "Raw Book Wyrm Slice",
+	"item.bookwyrms.book_wyrm_slice_cooked": "Cooked Book Wyrm Slice",
 	"item.bookwyrms.chad_bolus": "Chad Bolus",
 	"item.bookwyrms.chad_pie": "Chad Pie",
 	"item.bookwyrms.chad_bolus_suspicious": "Suspicious Chad Bolus",

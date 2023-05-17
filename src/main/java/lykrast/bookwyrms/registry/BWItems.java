@@ -10,6 +10,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -17,11 +18,14 @@ import net.minecraftforge.registries.RegistryObject;
 public class BWItems {
 	public static RegistryObject<Item> analyzer;
 	public static RegistryObject<Item> bookWyrmRaw, bookWyrmCooked, chadBolus, chadBolusSus, chadPie;
+	public static RegistryObject<Item> bookWyrmSliceRaw, bookWyrmSliceCooked;
 	public static RegistryObject<Item> scaleGrey, scaleRed, scaleOrange, scaleGreen, scaleBlue, scaleTeal, scalePurple;
 	public static RegistryObject<Item> mutagenBase, mutagenGrey, mutagenRed, mutagenOrange, mutagenGreen, mutagenBlue, mutagenTeal, mutagenPurple;
 	public static RegistryObject<Item> mutagenLvlUp, mutagenLvlDn, mutagenSpdUp, mutagenDgsUp, mutagenDgsDown, mutagenStasis;
 	public static RegistryObject<Item> spawnEgg;
 	public static final DeferredRegister<Item> REG = DeferredRegister.create(ForgeRegistries.ITEMS, BookWyrms.MODID);
+	
+	private static final String FARMERS_DELIGHT = "farmersdelight";
 
 	static {
 		//Put those at the start of the creative tab since they're the most likely things to be wanted
@@ -30,6 +34,10 @@ public class BWItems {
 		
 		bookWyrmRaw = initItem("book_wyrm_raw", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(3).saturationMod(0.3f).meat().build())));
 		bookWyrmCooked = initItem("book_wyrm_cooked", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(8).saturationMod(0.8f).meat().build())));
+		if (ModList.get().isLoaded(FARMERS_DELIGHT)) {
+			bookWyrmSliceRaw = initItem("book_wyrm_slice_raw", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(2).saturationMod(0.3f).meat().build())));
+			bookWyrmSliceCooked = initItem("book_wyrm_slice_cooked", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(4).saturationMod(0.8f).meat().build())));
+		}
 		chadBolus = initItem("chad_bolus", () -> new Item(defP()));
 		//This one doesn't appear in creative since it's an error message
 		chadBolusSus = initItem("chad_bolus_suspicious", () -> new SusBolusItem(new Item.Properties()));

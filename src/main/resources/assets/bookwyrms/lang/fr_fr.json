@@ -1,6 +1,8 @@
 {
 	"item.bookwyrms.book_wyrm_raw": "Wyrm scribe cru",
 	"item.bookwyrms.book_wyrm_cooked": "Wyrm scribe cuit",
+	"item.bookwyrms.book_wyrm_slice_raw": "Filet de wyrm scribe cru",
+	"item.bookwyrms.book_wyrm_slice_cooked": "Filet de wyrm scribe cuit",
 	"item.bookwyrms.chad_bolus": "Bolus de papier",
 	"item.bookwyrms.chad_pie": "Tarte au papier",
 	"item.bookwyrms.chad_bolus_suspicious": "Bolus de papier suspect",
