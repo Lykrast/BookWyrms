@@ -1,6 +1,6 @@
 {
 	"type": "minecraft:smelting",
-	"conditions": [{ "type": "forge:mod_loaded", "modid": "farmersdelight" }],
+	"conditions": [{ "type": "forge:item_exists", "item": "bookwyrms:book_wyrm_slice_raw" }],
 	"ingredient": { "item": "bookwyrms:book_wyrm_slice_raw" },
 	"result": "bookwyrms:book_wyrm_slice_cooked",
 	"experience": 0.35,

@@ -1,0 +1,13 @@
+{
+	"type": "farmersdelight:cooking",
+	"conditions": [{ "type": "forge:mod_loaded", "modid": "farmersdelight" }],
+	"recipe_book_tab": "meals",
+	"ingredients": [
+		{ "tag": "bookwyrms:cooked_book_wyrm" },
+		{ "item": "bookwyrms:scale_blue" },
+		{ "item": "minecraft:honey_bottle" }
+	],
+	"result": { "item": "bookwyrms:stew_blue" },
+	"experience": 1.0,
+	"cookingtime": 200
+}
