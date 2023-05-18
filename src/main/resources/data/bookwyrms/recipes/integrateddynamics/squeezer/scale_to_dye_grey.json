@@ -1,0 +1,8 @@
+{
+	"type": "integrateddynamics:squeezer",
+	"conditions": [{ "type": "forge:mod_loaded", "modid": "integrateddynamics" }],
+	"item": { "item": "bookwyrms:scale_grey" },
+	"result": { "items": [
+		{ "item": { "item": "minecraft:gray_dye", "count": 4 }}
+	]}
+}

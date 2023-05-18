@@ -1,0 +1,8 @@
+{
+	"type": "integrateddynamics:squeezer",
+	"conditions": [{ "type": "forge:mod_loaded", "modid": "integrateddynamics" }],
+	"item": { "item": "bookwyrms:scale_purple" },
+	"result": { "items": [
+		{ "item": { "item": "minecraft:purple_dye", "count": 4 }}
+	]}
+}
