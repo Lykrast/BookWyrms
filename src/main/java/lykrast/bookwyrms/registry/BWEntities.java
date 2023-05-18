@@ -17,7 +17,7 @@ public class BWEntities {
 	public static final DeferredRegister<EntityType<?>> REG = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, BookWyrms.MODID);
 
 	static {
-		bookWyrm = REG.register("book_wyrm", () -> EntityType.Builder.<BookWyrmEntity>of(BookWyrmEntity::new, MobCategory.CREATURE).sized(0.9f, 0.9f).clientTrackingRange(10).build(""));
+		bookWyrm = REG.register("book_wyrm", () -> EntityType.Builder.<BookWyrmEntity>of(BookWyrmEntity::new, MobCategory.CREATURE).sized(0.9f, 0.5625f).clientTrackingRange(10).build(""));
 	}
 
 	@SubscribeEvent
