@@ -1,0 +1,6 @@
+{
+	"type": "thermal:pulverizer",
+	"conditions": [{ "type": "forge:mod_loaded", "modid": "thermal_expansion" }],
+	"ingredient": { "item": "bookwyrms:scale_purple" },
+	"result": [{ "item": "minecraft:purple_dye", "chance": 2.0 }]
+}

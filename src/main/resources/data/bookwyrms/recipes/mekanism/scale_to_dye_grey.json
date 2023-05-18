@@ -1,0 +1,6 @@
+{
+	"type": "mekanism:enriching",
+	"conditions": [{ "type": "forge:mod_loaded", "modid": "mekanism" }],
+	"input": { "ingredient": { "item": "bookwyrms:scale_grey" }},
+	"output": { "item": "minecraft:gray_dye", "count": 2 }
+}

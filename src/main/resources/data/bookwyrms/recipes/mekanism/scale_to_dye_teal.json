@@ -1,0 +1,6 @@
+{
+	"type": "mekanism:enriching",
+	"conditions": [{ "type": "forge:mod_loaded", "modid": "mekanism" }],
+	"input": { "ingredient": { "item": "bookwyrms:scale_teal" }},
+	"output": { "item": "minecraft:light_blue_dye", "count": 2 }
+}
