@@ -1,21 +1,30 @@
 package lykrast.bookwyrms.registry;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import lykrast.bookwyrms.BookWyrms;
 import lykrast.bookwyrms.entity.BookWyrmEntity;
 import lykrast.bookwyrms.item.*;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 public class BWItems {
@@ -28,6 +37,19 @@ public class BWItems {
 	public static RegistryObject<Item> mutagenLvlUp, mutagenLvlDn, mutagenSpdUp, mutagenDgsUp, mutagenDgsDown, mutagenStasis;
 	public static RegistryObject<Item> spawnEgg;
 	public static final DeferredRegister<Item> REG = DeferredRegister.create(ForgeRegistries.ITEMS, BookWyrms.MODID);
+	
+	private static List<RegistryObject<? extends Item>> orderedItemsCreative = new ArrayList<>();
+	
+	public static void makeCreativeTab(RegisterEvent event) {
+		event.register(Registries.CREATIVE_MODE_TAB, helper -> {
+			helper.register(ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(BookWyrms.MODID, "bookwyrms")),
+					CreativeModeTab.builder()
+					.title(Component.translatable("itemGroup.bookwyrms"))
+					.icon(() -> new ItemStack(scaleBlue.get()))
+					.displayItems((parameters, output) -> orderedItemsCreative.forEach(i -> output.accept(i.get())))
+					.build());
+		});
+	}
 	
 	private static final String FARMERS_DELIGHT = "farmersdelight";
 	@ObjectHolder(registryName = "minecraft:mob_effect", value = FARMERS_DELIGHT + ":comfort")
@@ -45,7 +67,6 @@ public class BWItems {
 			bookWyrmSliceCooked = initItem("book_wyrm_slice_cooked", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(4).saturationMod(0.8f).meat().build())));
 		}
 		chadBolus = initItem("chad_bolus", () -> new Item(defP()));
-		//This one doesn't appear in creative since it's an error message
 		chadBolusSus = initItem("chad_bolus_suspicious", () -> new SusBolusItem(new Item.Properties()));
 		chadPie = initItem("chad_pie", () -> new Item(defP().food((new FoodProperties.Builder()).nutrition(6).saturationMod(0.8f).effect(() -> new MobEffectInstance(MobEffects.HUNGER, 5*20, 0), 0.3f).build())));
 		
@@ -88,7 +109,7 @@ public class BWItems {
 	}
 
 	public static Item.Properties defP() {
-		return new Item.Properties().tab(ItemGroupBookWyrms.INSTANCE);
+		return new Item.Properties();
 	}
 
 	public static Item.Properties stew(FoodProperties food) {
@@ -98,6 +119,9 @@ public class BWItems {
 
 	public static <I extends Item> RegistryObject<I> initItem(String name, Supplier<I> item) {
 		REG.register(name, item);
-		return RegistryObject.create(BookWyrms.rl(name), ForgeRegistries.ITEMS);
+		RegistryObject<I> rego = RegistryObject.create(BookWyrms.rl(name), ForgeRegistries.ITEMS);
+		//This one doesn't appear in creative since it's an error message
+		if (!name.equals("chad_bolus_suspicious")) orderedItemsCreative.add(rego);
+		return rego;
 	}
 }

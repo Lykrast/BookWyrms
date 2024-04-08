@@ -18,6 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -105,11 +106,12 @@ public class BookWyrmEntity extends Animal {
 		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 12).add(Attributes.MOVEMENT_SPEED, 0.25);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public InteractionResult mobInteract(Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 		if (!isBaby() && (stack.is(Items.ENCHANTED_BOOK) || stack.is(BWItems.chadBolus.get()))) {
-			if (level.isClientSide) return InteractionResult.SUCCESS;
+			if (level().isClientSide) return InteractionResult.SUCCESS;
 			// Eat enchanted book
 			toDigest += getBookValue(stack);
 			if (digestTimer <= 0) digestTimer = digestSpeed;
@@ -122,16 +124,17 @@ public class BookWyrmEntity extends Animal {
 		return super.mobInteract(player, hand);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void aiStep() {
 		super.aiStep();
-		if (level.isClientSide && isDigesting()) {
+		if (level().isClientSide && isDigesting()) {
 			//Digesting particles
 			for (int i = 0; i < 2; ++i) {
-				level.addParticle(ParticleTypes.ENCHANT, getRandomX(0.5), getRandomY(), getRandomZ(0.5), (random.nextDouble() - 0.5) * 2.0, -random.nextDouble(), (random.nextDouble() - 0.5) * 2.0);
+				level().addParticle(ParticleTypes.ENCHANT, getRandomX(0.5), getRandomY(), getRandomZ(0.5), (random.nextDouble() - 0.5) * 2.0, -random.nextDouble(), (random.nextDouble() - 0.5) * 2.0);
 			}
 		}
-		if (!level.isClientSide && toDigest > 0) {
+		if (!level().isClientSide && toDigest > 0) {
 			digestTimer--;
 			if (digestTimer <= 0) {
 				digested++;
@@ -606,7 +609,7 @@ public class BookWyrmEntity extends Animal {
 
 	@Nonnull
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		// I don't think I need it for this mob, but y'know just in case
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}

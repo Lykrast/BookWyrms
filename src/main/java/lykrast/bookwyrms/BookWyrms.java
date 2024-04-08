@@ -23,6 +23,7 @@ public class BookWyrms {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		bus.addListener(this::onModConfigEvent);
 		BWItems.REG.register(bus);
+		bus.addListener(BWItems::makeCreativeTab);
 		BWEntities.REG.register(bus);
 		BWSounds.REG.register(bus);
 		

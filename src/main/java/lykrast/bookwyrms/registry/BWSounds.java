@@ -20,6 +20,6 @@ public class BWSounds {
 	}
 
 	public static RegistryObject<SoundEvent> initSound(String name) {
-		return REG.register(name, () -> new SoundEvent(BookWyrms.rl(name)));
+		return REG.register(name, () -> SoundEvent.createVariableRangeEvent(BookWyrms.rl(name)));
 	}
 }

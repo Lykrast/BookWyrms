@@ -15,11 +15,12 @@ public class AnalyzerItem extends Item {
 		super(prop);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
 		//Wait what you can syntax like that??
 		if (entity instanceof BookWyrmEntity target) {
-			if (entity.level.isClientSide) return InteractionResult.SUCCESS;
+			if (entity.level().isClientSide) return InteractionResult.SUCCESS;
 			
 			//Stats
 			player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.level", target.getEnchantingLevel()));

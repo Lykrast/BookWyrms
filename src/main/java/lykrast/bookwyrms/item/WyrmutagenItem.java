@@ -22,15 +22,16 @@ public abstract class WyrmutagenItem extends Item {
 		super(prop);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
 		//Thanks vanilla for showing me this syntax
 		if (entity instanceof BookWyrmEntity wyrm) {
 			if (wyrm.isAlive()) {
-				if (player.level.isClientSide) return InteractionResult.SUCCESS;
+				if (player.level().isClientSide) return InteractionResult.SUCCESS;
 				
 				if (canApply(stack, wyrm)) {
-					wyrm.level.playSound(null, wyrm, BWSounds.mutagen.get(), SoundSource.PLAYERS, 1, 1);
+					wyrm.level().playSound(null, wyrm, BWSounds.mutagen.get(), SoundSource.PLAYERS, 1, 1);
 					applyMutagen(stack, wyrm);
 					if (!player.getAbilities().instabuild) stack.shrink(1);
 
