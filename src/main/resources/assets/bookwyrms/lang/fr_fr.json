@@ -76,6 +76,10 @@
 	"subtitles.bookwyrms.entity.bookwyrm.book": "Wyrm scribe écrit un livre",
 	"subtitles.bookwyrms.entity.bookwyrm.indigestion": "Wyrm scribe régurgite",
 	"subtitles.bookwyrms.item.wyrmutagen.use": "Wyrmutagène appliqué",
+
+	"tag.bookwyrms.raw_book_wyrm": "Viande de wyrm scribe crue",
+	"tag.bookwyrms.cooked_book_wyrm": "Viande de wyrm scribe cuite",
+	"tag.bookwyrms.scale": "Écailles de wyrm scribe",
 	
     "itemGroup.bookwyrms": "Book Wyrms"
 }
