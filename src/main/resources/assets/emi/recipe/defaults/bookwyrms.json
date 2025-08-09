@@ -1,0 +1,30 @@
+{
+	"added": [
+		"bookwyrms:analyzer",
+		"bookwyrms:cook_book_wyrm",
+		"bookwyrms:farmersdelight/cook_book_wyrm_slice",
+		"jei:/bookwyrms/farmersdelight/cut_book_wyrm",
+		"bookwyrms:chad_pie",
+		"bookwyrms:stew_grey",
+		"bookwyrms:stew_red",
+		"bookwyrms:stew_orange",
+		"bookwyrms:stew_green",
+		"bookwyrms:stew_blue",
+		"bookwyrms:stew_teal",
+		"bookwyrms:stew_purple",
+		"bookwyrms:wyrmutagen_base",
+		"bookwyrms:wyrmutagen_grey",
+		"bookwyrms:wyrmutagen_red",
+		"bookwyrms:wyrmutagen_orange",
+		"bookwyrms:wyrmutagen_green",
+		"bookwyrms:wyrmutagen_blue",
+		"bookwyrms:wyrmutagen_teal",
+		"bookwyrms:wyrmutagen_purple",
+		"bookwyrms:wyrmutagen_level_up",
+		"bookwyrms:wyrmutagen_level_down",
+		"bookwyrms:wyrmutagen_speed_up",
+		"bookwyrms:wyrmutagen_digestion_up",
+		"bookwyrms:wyrmutagen_digestion_down",
+		"bookwyrms:wyrmutagen_stasis"
+	]
+}
