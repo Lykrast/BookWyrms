@@ -579,9 +579,9 @@ public class BookWyrmEntity extends Animal {
 		digested = compound.getInt("Digested");
 		toDigest = compound.getInt("ToDigest");
 		digestTimer = compound.getInt("DigestTimer");
-		setDigesting(toDigest > 0);
 		if (compound.contains("MutagenC")) mutagenColor = compound.getInt("MutagenC");
 		if (compound.contains("MutagenS")) mutagenStat = compound.getInt("MutagenS");
+		setDigesting(toDigest > 0 || hasMutagen());
 	}
 
 	@Override
