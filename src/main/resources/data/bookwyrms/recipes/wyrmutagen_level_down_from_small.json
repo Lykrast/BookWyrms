@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "bookwyrms_wyrmutagen_level_down",
+	"pattern": [
+		"##",
+		"##"
+	],
+	"key": {
+		"#": { "item": "bookwyrms:wyrmutagen_level_down_small" }
+	},
+	"result": { "item": "bookwyrms:wyrmutagen_level_down" }
+}

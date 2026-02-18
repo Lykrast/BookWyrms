@@ -54,6 +54,8 @@
 	"item.bookwyrms.wyrmutagen_digestion_up.desc": "-%s%% indigestion chance",
 	"item.bookwyrms.wyrmutagen_digestion_down": "Digestion Down Wyrmutagen",
 	"item.bookwyrms.wyrmutagen_digestion_down.desc": "+%s%% indigestion chance",
+	"item.bookwyrms.wyrmutagen_level_up_small": "Small Level Up Wyrmutagen",
+	"item.bookwyrms.wyrmutagen_level_down_small": "Small Level Down Wyrmutagen",
 	
 	"item.bookwyrms.book_wyrm_spawn_egg": "Book Wyrm Spawn Egg",
 	

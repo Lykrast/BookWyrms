@@ -404,6 +404,12 @@ public class BookWyrmEntity extends Animal {
 			case WyrmutagenHelper.DIGESTION_DOWN:
 				indigestChance += ConfigValues.MUTAGEN_INDIGEST;
 				return true;
+			case WyrmutagenHelper.LVL_UP_SMALL:
+				enchLevel += 1;
+				return true;
+			case WyrmutagenHelper.LVL_DOWN_SMALL:
+				enchLevel -= 1;
+				return true;
 		}
 		return false;
 	}

@@ -41,6 +41,12 @@ public class WyrmutagenStat extends WyrmutagenItem {
 			case WyrmutagenHelper.DIGESTION_DOWN:
 				tooltip.add(Component.translatable(getDescriptionId() + ".desc", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(Math.round(100*ConfigValues.MUTAGEN_INDIGEST))).withStyle(ChatFormatting.GRAY));
 				break;
+			case WyrmutagenHelper.LVL_UP_SMALL:
+				tooltip.add(Component.translatable("item.bookwyrms.wyrmutagen_level_up.desc", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(1)).withStyle(ChatFormatting.GRAY));
+				break;
+			case WyrmutagenHelper.LVL_DOWN_SMALL:
+				tooltip.add(Component.translatable("item.bookwyrms.wyrmutagen_level_down.desc", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(1)).withStyle(ChatFormatting.GRAY));
+				break;
 		}
 	}
 

@@ -1,5 +1,6 @@
 {
 	"type": "minecraft:crafting_shapeless",
+	"group": "bookwyrms_wyrmutagen_level_down",
 	"ingredients": [
 		{ "item": "bookwyrms:wyrmutagen_base" },
 		{ "tag": "forge:gems/emerald" },

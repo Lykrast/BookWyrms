@@ -24,6 +24,8 @@
 		"bookwyrms:wyrmutagen_level_down",
 		"bookwyrms:wyrmutagen_speed_up",
 		"bookwyrms:wyrmutagen_digestion_up",
-		"bookwyrms:wyrmutagen_digestion_down"
+		"bookwyrms:wyrmutagen_digestion_down",
+		"bookwyrms:wyrmutagen_level_up_small",
+		"bookwyrms:wyrmutagen_level_down_small"
 	]
 }

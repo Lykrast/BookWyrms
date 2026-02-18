@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{ "item": "bookwyrms:wyrmutagen_level_up" }
+	],
+	"result": { "item": "bookwyrms:wyrmutagen_level_up_small", "count": 4 }
+}

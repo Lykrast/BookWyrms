@@ -34,7 +34,7 @@ public class BWItems {
 	public static RegistryObject<Item> scaleGrey, scaleRed, scaleOrange, scaleGreen, scaleBlue, scaleTeal, scalePurple;
 	public static RegistryObject<Item> stewGrey, stewRed, stewOrange, stewGreen, stewBlue, stewTeal, stewPurple;
 	public static RegistryObject<Item> mutagenBase, mutagenGrey, mutagenRed, mutagenOrange, mutagenGreen, mutagenBlue, mutagenTeal, mutagenPurple;
-	public static RegistryObject<Item> mutagenLvlUp, mutagenLvlDn, mutagenSpdUp, mutagenDgsUp, mutagenDgsDown;
+	public static RegistryObject<Item> mutagenLvlUp, mutagenLvlDn, mutagenSpdUp, mutagenDgsUp, mutagenDgsDown, mutagenLvlUpS, mutagenLvlDnS;
 	public static RegistryObject<Item> spawnEgg;
 	public static final DeferredRegister<Item> REG = DeferredRegister.create(ForgeRegistries.ITEMS, BookWyrms.MODID);
 	
@@ -100,8 +100,11 @@ public class BWItems {
 		mutagenBlue = initItem("wyrmutagen_blue", () -> new WyrmutagenColor(BookWyrmEntity.BLUE, defP()));
 		mutagenTeal = initItem("wyrmutagen_teal", () -> new WyrmutagenColor(BookWyrmEntity.TEAL, defP()));
 		mutagenPurple = initItem("wyrmutagen_purple", () -> new WyrmutagenColor(BookWyrmEntity.PURPLE, defP()));
+		
 		mutagenLvlUp = initItem("wyrmutagen_level_up", () -> new WyrmutagenStat(WyrmutagenHelper.LVL_UP, defP()));
 		mutagenLvlDn = initItem("wyrmutagen_level_down", () -> new WyrmutagenStat(WyrmutagenHelper.LVL_DOWN, defP()));
+		mutagenLvlUpS = initItem("wyrmutagen_level_up_small", () -> new WyrmutagenStat(WyrmutagenHelper.LVL_UP_SMALL, defP()));
+		mutagenLvlDnS = initItem("wyrmutagen_level_down_small", () -> new WyrmutagenStat(WyrmutagenHelper.LVL_DOWN_SMALL, defP()));
 		mutagenSpdUp = initItem("wyrmutagen_speed_up", () -> new WyrmutagenStat(WyrmutagenHelper.SPEED_UP, defP()));
 		mutagenDgsUp = initItem("wyrmutagen_digestion_up", () -> new WyrmutagenStat(WyrmutagenHelper.DIGESTION_UP, defP()));
 		mutagenDgsDown = initItem("wyrmutagen_digestion_down", () -> new WyrmutagenStat(WyrmutagenHelper.DIGESTION_DOWN, defP()));

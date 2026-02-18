@@ -20,7 +20,7 @@ public class WyrmutagenHelper {
 			BWItems.mutagenDgsUp, BWItems.mutagenDgsDown,
 			BWItems.mutagenBase
 			};
-	public static final int LVL_UP = 0, LVL_DOWN = 1, SPEED_UP = 2, SPEED_DOWN = 3, DIGESTION_UP = 4, DIGESTION_DOWN = 5, STASIS = 6;
+	public static final int LVL_UP = 0, LVL_DOWN = 1, SPEED_UP = 2, SPEED_DOWN = 3, DIGESTION_UP = 4, DIGESTION_DOWN = 5, LVL_UP_SMALL = 6, LVL_DOWN_SMALL = 7;
 	
 	@SuppressWarnings("unchecked")
 	public static String colorName(int color) {
