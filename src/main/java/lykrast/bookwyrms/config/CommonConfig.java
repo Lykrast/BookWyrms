@@ -13,7 +13,8 @@ public class CommonConfig {
 	public final DoubleValue indigestWildMin, indigestWildMax, indigestWildRareMin, indigestWildRareMax;
 	public final IntValue enchLvlBreedVariance, digestBreedVariance;
 	public final DoubleValue indigestBreedVariance;
-	public final IntValue enchLvlMutagen, digestMutagen;
+	public final IntValue enchLvlMutagen;
+	public final DoubleValue digestMutagen, digestMutagenPenalty;
 	public final DoubleValue indigestMutagen;
 	
 	public CommonConfig(ForgeConfigSpec.Builder builder) {
@@ -62,9 +63,10 @@ public class CommonConfig {
 		builder.pop();
 		builder.comment("How much do stat wyrmutagen changes stats");
 		builder.push("mutagen");
-		enchLvlMutagen = intval(builder, "enchLvlMutagen", 8, 0, Short.MAX_VALUE, "How much does Level Up/Down Wyrmutagen changes enchanting level for the next offspring");
-		digestMutagen = intval(builder, "digestMutagen", 60, 0, Short.MAX_VALUE, "How much does Speed Up/Down Wyrmutagen changes digesting speed for the next offspring");
-		indigestMutagen = doubleval(builder, "indigestMutagen", 0.1, 0, 1, "How much does Digestion Up/Down Wyrmutagen changes indigestion chance for the next offspring");
+		enchLvlMutagen = intval(builder, "enchLvlMutagen", 8, 0, Short.MAX_VALUE, "How much does Level Up/Down Wyrmutagen changes enchanting level");
+		digestMutagen = doubleval(builder, "digestMutagen", 0.6, 0, 1, "Speed Up Wyrmutagen multiplies digesting time by this value (eg. 0.6 = x0.6 = -40%)", "Will always remove at least 1 tick");
+		digestMutagenPenalty = doubleval(builder, "digestMutagenPenalty", 0.05, 0, 1, "How much indigestion chance does Speed Up Wyrmutagen adds (0 to disable)");
+		indigestMutagen = doubleval(builder, "indigestMutagen", 0.1, 0, 1, "How much does Digestion Up/Down Wyrmutagen changes indigestion chance");
 		builder.pop();
 		builder.pop();
 	}

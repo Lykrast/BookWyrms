@@ -401,10 +401,8 @@ public class BookWyrmEntity extends Animal {
 				enchLevel -= ConfigValues.MUTAGEN_LEVEL;
 				return true;
 			case WyrmutagenHelper.SPEED_UP:
-				digestSpeed -= ConfigValues.MUTAGEN_SPEED;
-				return true;
-			case WyrmutagenHelper.SPEED_DOWN:
-				digestSpeed += ConfigValues.MUTAGEN_SPEED;
+				digestSpeed = Math.min((int)Math.floor(digestSpeed*ConfigValues.MUTAGEN_SPEED_MULT), digestSpeed-1);
+				if (ConfigValues.MUTAGEN_SPEED_PENALTY > 0) indigestChance += ConfigValues.MUTAGEN_SPEED_PENALTY;
 				return true;
 			case WyrmutagenHelper.DIGESTION_UP:
 				indigestChance -= ConfigValues.MUTAGEN_INDIGEST;

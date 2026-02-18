@@ -14,8 +14,8 @@ public class ConfigValues {
 	public static int VARIANCE_LEVEL = 3, VARIANCE_SPEED = 20;
 	public static double VARIANCE_INDIGEST = 0.03;
 	
-	public static int MUTAGEN_LEVEL = 8, MUTAGEN_SPEED = 60;
-	public static double MUTAGEN_INDIGEST = 0.1;
+	public static int MUTAGEN_LEVEL = 8;
+	public static double MUTAGEN_SPEED_MULT = 0.6, MUTAGEN_SPEED_PENALTY = 0.05, MUTAGEN_INDIGEST = 0.1;
 	
 	public static boolean ALLOW_UNDISCOVERABLE = false, DISABLE_SUS_WARNING = false, DISABLE_COLOR = false, FALLBACK = false, IGNORE_MAX = false;
 	
@@ -61,7 +61,8 @@ public class ConfigValues {
 		VARIANCE_SPEED = ConfigHolder.COMMON.digestBreedVariance.get();
 		VARIANCE_INDIGEST = ConfigHolder.COMMON.indigestBreedVariance.get();
 		MUTAGEN_LEVEL = ConfigHolder.COMMON.enchLvlMutagen.get();
-		MUTAGEN_SPEED = ConfigHolder.COMMON.digestMutagen.get();
+		MUTAGEN_SPEED_MULT = ConfigHolder.COMMON.digestMutagen.get();
+		MUTAGEN_SPEED_PENALTY = ConfigHolder.COMMON.digestMutagenPenalty.get();
 		MUTAGEN_INDIGEST = ConfigHolder.COMMON.indigestMutagen.get();
 		ALLOW_UNDISCOVERABLE = ConfigHolder.COMMON.allowUndiscoverable.get();
 		DISABLE_SUS_WARNING = ConfigHolder.COMMON.disableSusWarning.get();
