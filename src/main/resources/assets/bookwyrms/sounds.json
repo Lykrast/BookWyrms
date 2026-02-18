@@ -32,5 +32,11 @@
 			{ "name": "item/dye/dye", "pitch": 0.95 },
 			{ "name": "item/dye/dye", "pitch": 1.1 }
 		]
+	},
+	"item.wyrmutagen.finish": {
+		"subtitle": "subtitles.bookwyrms.item.wyrmutagen.finish",
+		"sounds": [
+			{ "name": "random/levelup", "volume": 0.4 }
+		]
 	}
 }

@@ -80,6 +80,7 @@
 	"subtitles.bookwyrms.entity.bookwyrm.book": "Book Wyrm writes a book",
 	"subtitles.bookwyrms.entity.bookwyrm.indigestion": "Book Wyrm regurgitates",
 	"subtitles.bookwyrms.item.wyrmutagen.use": "Wyrmutagen applied",
+	"subtitles.bookwyrms.item.wyrmutagen.finish": "Wyrmutagen digested",
 
 	"tag.bookwyrms.raw_book_wyrm": "Raw Book Wyrm Meat",
 	"tag.bookwyrms.cooked_book_wyrm": "Cooked Book Wyrm Meat",

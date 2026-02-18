@@ -130,17 +130,16 @@ public class BookWyrmEntity extends Animal {
 			BWItems.scaleOrange, BWItems.scaleGreen, BWItems.scaleBlue,
 			BWItems.scaleTeal, BWItems.scalePurple };
 
-	@SuppressWarnings("resource")
 	@Override
 	public void aiStep() {
 		super.aiStep();
-		if (level().isClientSide && isDigesting()) {
+		if (level().isClientSide() && isDigesting()) {
 			//Digesting particles
 			for (int i = 0; i < 2; ++i) {
 				level().addParticle(ParticleTypes.ENCHANT, getRandomX(0.5), getRandomY(), getRandomZ(0.5), (random.nextDouble() - 0.5) * 2.0, -random.nextDouble(), (random.nextDouble() - 0.5) * 2.0);
 			}
 		}
-		if (!level().isClientSide && (toDigest > 0 || hasMutagen())) {
+		if (!level().isClientSide() && (toDigest > 0 || hasMutagen())) {
 			digestTimer--;
 			if (digestTimer <= 0) {
 				if (hasMutagen()) {
@@ -154,8 +153,9 @@ public class BookWyrmEntity extends Animal {
 						spawnAtLocation(new ItemStack((Item)(SCALES[getWyrmType()].get()), random.nextIntBetweenInclusive(2, 3)));
 						setWyrmType(mutagenColor);
 					}
-					//TODO proper sound and a particle effect?
-					playSound(BWSounds.wyrmBook.get(), 1, 1);
+					playSound(BWSounds.mutagenDone.get(), 1, 1);
+					//level isn't client side so I think that should be safe?
+					((ServerLevel)level()).sendParticles(ParticleTypes.HAPPY_VILLAGER, getX(), getEyeY(), getZ(), 5, 0.5, 0.25, 0.5, 0.02);
 					clearMutagen();
 				}
 				else {
