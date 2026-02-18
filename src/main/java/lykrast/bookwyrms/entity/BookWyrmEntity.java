@@ -11,9 +11,9 @@ import com.google.common.collect.Lists;
 import lykrast.bookwyrms.BookWyrms;
 import lykrast.bookwyrms.config.ConfigValues;
 import lykrast.bookwyrms.item.WyrmutagenHelper;
-import lykrast.bookwyrms.registry.BWSounds;
 import lykrast.bookwyrms.registry.BWEntities;
 import lykrast.bookwyrms.registry.BWItems;
+import lykrast.bookwyrms.registry.BWSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -377,12 +377,6 @@ public class BookWyrmEntity extends Animal {
 		else child.indigestChance = min2 + rand.nextDouble() * (max2 - min2) + rand.nextDouble() * ConfigValues.VARIANCE_INDIGEST*2 - ConfigValues.VARIANCE_INDIGEST;
 		
 		child.clampGenes();
-	}
-	
-	private void copyGenes(BookWyrmEntity donor) {
-		enchLevel = donor.enchLevel;
-		digestSpeed = donor.digestSpeed;
-		indigestChance = donor.indigestChance;
 	}
 	
 	private void clampGenes() {

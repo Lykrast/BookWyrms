@@ -54,8 +54,6 @@
 	"item.bookwyrms.wyrmutagen_digestion_up.desc": "-%s%% indigestion chance",
 	"item.bookwyrms.wyrmutagen_digestion_down": "Digestion Down Wyrmutagen",
 	"item.bookwyrms.wyrmutagen_digestion_down.desc": "+%s%% indigestion chance",
-	"item.bookwyrms.wyrmutagen_stasis": "Stasis Wyrmutagen",
-	"item.bookwyrms.wyrmutagen_stasis.desc": "Copies the Wyrm's stats to the next offspring",
 	
 	"item.bookwyrms.book_wyrm_spawn_egg": "Book Wyrm Spawn Egg",
 	

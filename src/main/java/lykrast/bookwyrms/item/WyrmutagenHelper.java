@@ -18,7 +18,7 @@ public class WyrmutagenHelper {
 			BWItems.mutagenLvlUp, BWItems.mutagenLvlDn, 
 			BWItems.mutagenSpdUp, BWItems.mutagenBase, 
 			BWItems.mutagenDgsUp, BWItems.mutagenDgsDown,
-			BWItems.mutagenStasis
+			BWItems.mutagenBase
 			};
 	public static final int LVL_UP = 0, LVL_DOWN = 1, SPEED_UP = 2, SPEED_DOWN = 3, DIGESTION_UP = 4, DIGESTION_DOWN = 5, STASIS = 6;
 	
