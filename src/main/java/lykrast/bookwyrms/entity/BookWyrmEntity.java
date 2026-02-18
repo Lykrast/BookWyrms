@@ -511,10 +511,6 @@ public class BookWyrmEntity extends Animal {
 		return toDigest;
 	}
 	
-	public int getMutagenColor() {
-		return mutagenColor;
-	}
-	
 	public boolean hasMutagen() {
 		return mutagenColor >= 0 || mutagenStat >= 0;
 	}
@@ -523,8 +519,10 @@ public class BookWyrmEntity extends Animal {
 		mutagenColor = color;
 	}
 	
-	public int getMutagenStat() {
-		return mutagenStat;
+	public String getMutagenString() {
+		if (mutagenStat >= 0) return WyrmutagenHelper.statName(mutagenStat);
+		else if (mutagenColor >= 0) return WyrmutagenHelper.colorName(mutagenColor);
+		else return "";
 	}
 	
 	public void setMutagenStat(int stat) {
@@ -564,6 +562,12 @@ public class BookWyrmEntity extends Animal {
 		byte b = (byte) (entityData.get(DATA) & (~TREASURE_MASK));
 		if (treasure) b = (byte) (b | TREASURE_MASK);
 		entityData.set(DATA, b);
+	}
+
+	public int getRemainingDigestTime() {
+		int time = digestTimer;
+		if (toDigest > 0) time += (hasMutagen() ? toDigest : toDigest-1) * digestSpeed;
+		return time;
 	}
 
 	@Override

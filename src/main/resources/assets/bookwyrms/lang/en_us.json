@@ -59,14 +59,18 @@
 	
 	"item.bookwyrms.book_wyrm_spawn_egg": "Book Wyrm Spawn Egg",
 	
-	"status.bookwyrms.analyze.level": "§9Enchanting level: §f%d§r",
-	"status.bookwyrms.analyze.speed": "§9Digesting speed: §f%d ticks per level§r",
-	"status.bookwyrms.analyze.indigest": "§9Indigestion chance: §f%d%%§r",
-	"status.bookwyrms.analyze.treasure": "§6Its eyes glow with power§r",
-	"status.bookwyrms.analyze.digested": "§2Digested levels: §f%d§r",
-	"status.bookwyrms.analyze.todigest": "§2Digesting §f%d§2 levels§r",
-	"status.bookwyrms.analyze.wyrmutagen": "§dActive Wyrmutagen: §r",
-	"status.bookwyrms.analyze.wyrmutagen2": "§dActive Wyrmutagens: §r",
+	"status.bookwyrms.analyze.level": "Enchanting level: %s",
+	"status.bookwyrms.analyze.speed": "Digesting speed: %s",
+	"status.bookwyrms.analyze.speed.format": "%s ticks per level",
+	"status.bookwyrms.analyze.indigest": "Indigestion chance: %s",
+	"status.bookwyrms.analyze.indigest.format": "%s%%",
+	"status.bookwyrms.analyze.treasure": "Its eyes glow with power",
+	"status.bookwyrms.analyze.digested": "Digested levels: %s",
+	"status.bookwyrms.analyze.digesting": "Digesting: %s",
+	"status.bookwyrms.analyze.digesting.nothing": "something neutralized",
+	"status.bookwyrms.analyze.digesting.levels": "%1$s levels",
+	"status.bookwyrms.analyze.digesting.both": "%1$s and %2$s levels",
+	"status.bookwyrms.analyze.digesting.time": "(%s seconds left)",
 	
 	"entity.bookwyrms.book_wyrm": "Book Wyrm",
 	
