@@ -14,11 +14,7 @@ public class WyrmutagenStat extends WyrmutagenItem {
 	@Override
 	public void applyMutagen(ItemStack stack, BookWyrmEntity wyrm) {
 		wyrm.setMutagenStat(stat);
-	}
-
-	@Override
-	public boolean canApply(ItemStack stack, BookWyrmEntity wyrm) {
-		return wyrm.getMutagenStat() != stat;
+		wyrm.startDigestingMutagen();
 	}
 
 }

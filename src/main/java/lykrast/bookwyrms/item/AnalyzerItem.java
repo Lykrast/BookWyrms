@@ -25,26 +25,27 @@ public class AnalyzerItem extends Item {
 			//Stats
 			player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.level", target.getEnchantingLevel()));
 			player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.speed", target.getDigestingSpeed()));
-			player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.indigest", (int)(100*target.getIndigestionChance())));
+			player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.indigest", Math.round(100*target.getIndigestionChance())));
 			if (target.isTreasure()) player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.treasure"));
 			
 			//Mutagen
-			if (target.hasMutagenColor()) {
-				if (target.hasMutagenStat()) {
-					player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.wyrmutagen2")
-							.append(Component.translatable(WyrmutagenHelper.colorName(target.getMutagenColor())).withStyle(ChatFormatting.WHITE))
-							.append(", ").withStyle(ChatFormatting.WHITE)
-							.append(Component.translatable(WyrmutagenHelper.statName(target.getMutagenStat())).withStyle(ChatFormatting.WHITE)));
-				}
-				else {
-					player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.wyrmutagen")
-							.append(Component.translatable(WyrmutagenHelper.colorName(target.getMutagenColor())).withStyle(ChatFormatting.WHITE)));
-				}
-			}
-			else if (target.hasMutagenStat()) {
-				player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.wyrmutagen")
-						.append(Component.translatable(WyrmutagenHelper.statName(target.getMutagenStat())).withStyle(ChatFormatting.WHITE)));
-			}
+			//TODO redisplay with new system
+//			if (target.hasMutagenColor()) {
+//				if (target.hasMutagenStat()) {
+//					player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.wyrmutagen2")
+//							.append(Component.translatable(WyrmutagenHelper.colorName(target.getMutagenColor())).withStyle(ChatFormatting.WHITE))
+//							.append(", ").withStyle(ChatFormatting.WHITE)
+//							.append(Component.translatable(WyrmutagenHelper.statName(target.getMutagenStat())).withStyle(ChatFormatting.WHITE)));
+//				}
+//				else {
+//					player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.wyrmutagen")
+//							.append(Component.translatable(WyrmutagenHelper.colorName(target.getMutagenColor())).withStyle(ChatFormatting.WHITE)));
+//				}
+//			}
+//			else if (target.hasMutagenStat()) {
+//				player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.wyrmutagen")
+//						.append(Component.translatable(WyrmutagenHelper.statName(target.getMutagenStat())).withStyle(ChatFormatting.WHITE)));
+//			}
 			
 			//Digestion
 			player.sendSystemMessage(Component.translatable("status.bookwyrms.analyze.digested", target.getDigestedLevels()));

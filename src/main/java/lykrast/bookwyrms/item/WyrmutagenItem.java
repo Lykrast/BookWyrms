@@ -44,7 +44,9 @@ public abstract class WyrmutagenItem extends Item {
 	}
 	
 	public abstract void applyMutagen(ItemStack stack, BookWyrmEntity wyrm);
-	public abstract boolean canApply(ItemStack stack, BookWyrmEntity wyrm);
+	public boolean canApply(ItemStack stack, BookWyrmEntity wyrm) {
+		return !wyrm.hasMutagen();
+	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flags) {

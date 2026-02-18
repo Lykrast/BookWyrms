@@ -11,13 +11,12 @@ public class WyrmutagenBase extends WyrmutagenItem {
 
 	@Override
 	public void applyMutagen(ItemStack stack, BookWyrmEntity wyrm) {
-		wyrm.clearMutagenColor();
-		wyrm.clearMutagenStat();
+		wyrm.clearMutagen();
 	}
 
 	@Override
 	public boolean canApply(ItemStack stack, BookWyrmEntity wyrm) {
-		return wyrm.hasMutagenColor() || wyrm.hasMutagenStat();
+		return wyrm.hasMutagen();
 	}
 
 }

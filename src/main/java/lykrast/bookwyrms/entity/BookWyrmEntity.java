@@ -66,6 +66,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class BookWyrmEntity extends Animal {
 	// Types 0-6 : grey, red, orange, green, blue, teal, purple
@@ -124,6 +125,11 @@ public class BookWyrmEntity extends Animal {
 		return super.mobInteract(player, hand);
 	}
 
+	//damn it can't generic array
+	private static final RegistryObject<?>[] SCALES = { BWItems.scaleGrey, BWItems.scaleRed,
+			BWItems.scaleOrange, BWItems.scaleGreen, BWItems.scaleBlue,
+			BWItems.scaleTeal, BWItems.scalePurple };
+
 	@SuppressWarnings("resource")
 	@Override
 	public void aiStep() {
@@ -134,17 +140,35 @@ public class BookWyrmEntity extends Animal {
 				level().addParticle(ParticleTypes.ENCHANT, getRandomX(0.5), getRandomY(), getRandomZ(0.5), (random.nextDouble() - 0.5) * 2.0, -random.nextDouble(), (random.nextDouble() - 0.5) * 2.0);
 			}
 		}
-		if (!level().isClientSide && toDigest > 0) {
+		if (!level().isClientSide && (toDigest > 0 || hasMutagen())) {
 			digestTimer--;
 			if (digestTimer <= 0) {
-				digested++;
-				toDigest--;
-				digestTimer = digestSpeed;
-				if (digested >= enchLevel) {
-					digested -= enchLevel;
-					makeBook();
+				if (hasMutagen()) {
+					//digest the mutagen first
+					if (mutagenStat >= 0) {
+						mutateStats(mutagenStat);
+						clampGenes();
+					}
+					if (mutagenColor >= 0) {
+						//shed previous scales
+						spawnAtLocation(new ItemStack((Item)(SCALES[getWyrmType()].get()), random.nextIntBetweenInclusive(2, 3)));
+						setWyrmType(mutagenColor);
+					}
+					//TODO proper sound and a particle effect?
+					playSound(BWSounds.wyrmBook.get(), 1, 1);
+					clearMutagen();
+				}
+				else {
+					//no mutagen, digest a level
+					digested++;
+					toDigest--;
+					if (digested >= enchLevel) {
+						digested -= enchLevel;
+						makeBook();
+					}
 				}
 				if (toDigest <= 0) setDigesting(false);
+				else digestTimer = digestSpeed;
 			}
 		}
 	}
@@ -304,25 +328,12 @@ public class BookWyrmEntity extends Animal {
 
 	public static void mixGenes(BookWyrmEntity a, BookWyrmEntity b, BookWyrmEntity child, RandomSource rand) {
 		// Type
-		if (a.hasMutagenColor() || b.hasMutagenColor()) {
-			//Color mutagen, if both have it choose at random
-			BookWyrmEntity donor;
-			if (!b.hasMutagenColor()) donor = a;
-			else if (!a.hasMutagenColor()) donor = b;
-			else donor = rand.nextBoolean() ? a : b;
-			
-			child.setWyrmType(donor.getMutagenColor());
-			donor.clearMutagenColor();
-		}
-		else {
-			// No mutagen, mix it
-			int chartType = a.getWyrmType();
-			// Grey + something else = take the other
-			if (chartType == GREY) chartType = b.getWyrmType();
-			// Otherwise take a random parent
-			else if (b.getWyrmType() != GREY && rand.nextBoolean()) chartType = b.getWyrmType();
-			child.setWyrmType(offspringWyrmType(chartType, rand));
-		}
+		int chartType = a.getWyrmType();
+		// Grey + something else = take the other
+		if (chartType == GREY) chartType = b.getWyrmType();
+		// Otherwise take a random parent
+		else if (b.getWyrmType() != GREY && rand.nextBoolean()) chartType = b.getWyrmType();
+		child.setWyrmType(offspringWyrmType(chartType, rand));
 
 		// Treasure, 10% if both parents, 5% if 1 parent, 1% if 0
 		int treasureChance = 100;
@@ -333,41 +344,37 @@ public class BookWyrmEntity extends Animal {
 		child.setTreasure(rand.nextInt(treasureChance) == 0);
 		
 		//Stasis
-		if (a.getMutagenStat() == WyrmutagenHelper.STASIS || b.getMutagenStat() == WyrmutagenHelper.STASIS) {
-			//If both have it choose at random
-			BookWyrmEntity donor;
-			if (b.getMutagenStat() != WyrmutagenHelper.STASIS) donor = a;
-			else if (a.getMutagenStat() != WyrmutagenHelper.STASIS) donor = b;
-			else donor = rand.nextBoolean() ? a : b;
-			
-			child.copyGenes(donor);
-			donor.clearMutagenStat();
-		}
-		else {
-			// Normal genes, take a random point between the 2 parents then add a random mutation, then clamp to the caps
-			// However, for sanity if 2 parents at the "desirable" caps breed then the child inherits it
-			// Level
-			int min = Math.min(a.enchLevel, b.enchLevel);
-			int max = Math.max(a.enchLevel, b.enchLevel);
-			if (min == ConfigValues.MAX_LEVEL && max == ConfigValues.MAX_LEVEL) child.enchLevel = ConfigValues.MAX_LEVEL;
-			else child.enchLevel = rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, ConfigValues.VARIANCE_LEVEL*2) - ConfigValues.VARIANCE_LEVEL;
-			// Speed
-			min = Math.min(a.digestSpeed, b.digestSpeed);
-			max = Math.max(a.digestSpeed, b.digestSpeed);
-			if (min == ConfigValues.MIN_SPEED && max == ConfigValues.MIN_SPEED) child.digestSpeed = ConfigValues.MIN_SPEED;
-			else child.digestSpeed = rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, ConfigValues.VARIANCE_SPEED*2) - ConfigValues.VARIANCE_SPEED;
-			// Digestion, cap on both ways cause maybe someone wants 100% to farm chad I won't judge
-			double min2 = Math.min(a.indigestChance, b.indigestChance);
-			double max2 = Math.max(a.indigestChance, b.indigestChance);
-			// Because we clamp stuff, MIN should be always lower than the wyrm's values
-			if (min2 - ConfigValues.MIN_INDIGEST < 0.01 && max2 - ConfigValues.MIN_INDIGEST < 0.01) child.indigestChance = ConfigValues.MIN_INDIGEST;
-			// Because we clamp stuff, MAX should be always higher than the wyrm's values
-			else if (ConfigValues.MAX_INDIGEST - min2 < 0.01 && ConfigValues.MAX_INDIGEST - max2 < 0.01) child.indigestChance = ConfigValues.MAX_INDIGEST;
-			else child.indigestChance = min2 + rand.nextDouble() * (max2 - min2) + rand.nextDouble() * ConfigValues.VARIANCE_INDIGEST*2 - ConfigValues.VARIANCE_INDIGEST;
-		}
-		
-		if (a.hasMutagenStat() && child.mutateStats(a.getMutagenStat())) a.clearMutagenStat();		
-		if (b.hasMutagenStat() && child.mutateStats(b.getMutagenStat())) b.clearMutagenStat();
+//		if (a.getMutagenStat() == WyrmutagenHelper.STASIS || b.getMutagenStat() == WyrmutagenHelper.STASIS) {
+//			//If both have it choose at random
+//			BookWyrmEntity donor;
+//			if (b.getMutagenStat() != WyrmutagenHelper.STASIS) donor = a;
+//			else if (a.getMutagenStat() != WyrmutagenHelper.STASIS) donor = b;
+//			else donor = rand.nextBoolean() ? a : b;
+//			
+//			child.copyGenes(donor);
+//			donor.clearMutagenStat();
+//		}
+//		else {
+		// Normal genes, take a random point between the 2 parents then add a random mutation, then clamp to the caps
+		// However, for sanity if 2 parents at the "desirable" caps breed then the child inherits it
+		// Level
+		int min = Math.min(a.enchLevel, b.enchLevel);
+		int max = Math.max(a.enchLevel, b.enchLevel);
+		if (min == ConfigValues.MAX_LEVEL && max == ConfigValues.MAX_LEVEL) child.enchLevel = ConfigValues.MAX_LEVEL;
+		else child.enchLevel = rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, ConfigValues.VARIANCE_LEVEL*2) - ConfigValues.VARIANCE_LEVEL;
+		// Speed
+		min = Math.min(a.digestSpeed, b.digestSpeed);
+		max = Math.max(a.digestSpeed, b.digestSpeed);
+		if (min == ConfigValues.MIN_SPEED && max == ConfigValues.MIN_SPEED) child.digestSpeed = ConfigValues.MIN_SPEED;
+		else child.digestSpeed = rand.nextIntBetweenInclusive(min, max) + rand.nextIntBetweenInclusive(0, ConfigValues.VARIANCE_SPEED*2) - ConfigValues.VARIANCE_SPEED;
+		// Digestion, cap on both ways cause maybe someone wants 100% to farm chad I won't judge
+		double min2 = Math.min(a.indigestChance, b.indigestChance);
+		double max2 = Math.max(a.indigestChance, b.indigestChance);
+		// Because we clamp stuff, MIN should be always lower than the wyrm's values
+		if (min2 - ConfigValues.MIN_INDIGEST < 0.01 && max2 - ConfigValues.MIN_INDIGEST < 0.01) child.indigestChance = ConfigValues.MIN_INDIGEST;
+		// Because we clamp stuff, MAX should be always higher than the wyrm's values
+		else if (ConfigValues.MAX_INDIGEST - min2 < 0.01 && ConfigValues.MAX_INDIGEST - max2 < 0.01) child.indigestChance = ConfigValues.MAX_INDIGEST;
+		else child.indigestChance = min2 + rand.nextDouble() * (max2 - min2) + rand.nextDouble() * ConfigValues.VARIANCE_INDIGEST*2 - ConfigValues.VARIANCE_INDIGEST;
 		
 		child.clampGenes();
 	}
@@ -473,6 +480,11 @@ public class BookWyrmEntity extends Animal {
 		//Subtitles are generic so we good on keeping this.
 		playSound(SoundEvents.COW_STEP, 0.15F, 1.0F);
 	}
+	
+	public void startDigestingMutagen() {
+		digestTimer = random.nextIntBetweenInclusive(digestSpeed*5, digestSpeed*7);
+		setDigesting(true);
+	}
 
 	@Override
 	protected float getSoundVolume() {
@@ -503,32 +515,25 @@ public class BookWyrmEntity extends Animal {
 		return mutagenColor;
 	}
 	
-	public boolean hasMutagenColor() {
-		return mutagenColor >= 0;
+	public boolean hasMutagen() {
+		return mutagenColor >= 0 || mutagenStat >= 0;
 	}
 	
 	public void setMutagenColor(int color) {
 		mutagenColor = color;
 	}
 	
-	public void clearMutagenColor() {
-		mutagenColor = -1;
-	}
-	
 	public int getMutagenStat() {
 		return mutagenStat;
-	}
-	
-	public boolean hasMutagenStat() {
-		return mutagenStat >= 0;
 	}
 	
 	public void setMutagenStat(int stat) {
 		mutagenStat = stat;
 	}
 	
-	public void clearMutagenStat() {
+	public void clearMutagen() {
 		mutagenStat = -1;
+		mutagenColor = -1;
 	}
 
 	public int getWyrmType() {

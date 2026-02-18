@@ -14,11 +14,7 @@ public class WyrmutagenColor extends WyrmutagenItem {
 	@Override
 	public void applyMutagen(ItemStack stack, BookWyrmEntity wyrm) {
 		wyrm.setMutagenColor(color);
-	}
-
-	@Override
-	public boolean canApply(ItemStack stack, BookWyrmEntity wyrm) {
-		return wyrm.getMutagenColor() != color;
+		wyrm.startDigestingMutagen();
 	}
 
 }
