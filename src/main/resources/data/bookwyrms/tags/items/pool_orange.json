@@ -3,6 +3,12 @@
 		"minecraft:bow",
 		"minecraft:crossbow",
 		{ "id": "gunswithoutroses:iron_gun", "required": false },
-		{ "id": "create:potato_cannon", "required": false }
+		{ "id": "gunswithoutroses:diamond_sniper", "required": false },
+		{ "id": "create:potato_cannon", "required": false },
+		{ "id": "malum:mnemonic_hex_staff", "required": false },
+		{ "id": "alexscaves:raygun", "required": false },
+		{ "id": "alexscaves:dreadbow", "required": false },
+		{ "id": "alexscaves:shot_gum", "required": false },
+		{ "id": "alexscaves:sugar_staff", "required": false }
 	]
 }

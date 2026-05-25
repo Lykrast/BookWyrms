@@ -5,6 +5,9 @@
 		"minecraft:iron_leggings",
 		"minecraft:iron_boots",
 		"minecraft:shield",
-		{ "id": "create:copper_backtank", "required": false }
+		"minecraft:iron_horse_armor",
+		{ "id": "create:copper_backtank", "required": false },
+		{ "id": "aether:iron_gloves", "required": false },
+		{ "id": "alexscaves:resistor_shield", "required": false }
 	]
 }

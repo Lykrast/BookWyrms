@@ -1,5 +1,10 @@
 {
 	"values": [
-		"minecraft:iron_sword"
+		"minecraft:iron_sword",
+		{ "id": "malum:crude_scythe", "required": false },
+		{ "id": "tameablebeasts:beetle_sword", "required": false },
+		{ "id": "alexscaves:primitive_club", "required": false },
+		{ "id": "alexscaves:extinction_spear", "required": false },
+		{ "id": "alexscaves:desolate_dagger", "required": false }
 	]
 }

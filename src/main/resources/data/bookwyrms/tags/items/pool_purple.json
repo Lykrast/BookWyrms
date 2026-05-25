@@ -3,6 +3,13 @@
 		{ "id": "alexsmobs:straddleboard", "required": false },
 		{ "id": "domesticationinnovation:collar_tag", "required": false },
 		{ "id": "superiorshields:iron_shield", "required": false },
-		{ "id": "iwannaskate:skateboard", "required": false }
+		{ "id": "iwannaskate:skateboard", "required": false },
+		{ "id": "broomsmod:wooden_broom", "required": false },
+		{ "id": "supplementaries:bubble_blower", "required": false },
+		{ "id": "supplementaries:slingshot", "required": false },
+		{ "id": "yttr:cuprosteel_coil", "required": false },
+		{ "id": "alexscaves:galena_gauntlet", "required": false },
+		{ "id": "alexscaves:totem_of_possession", "required": false },
+		{ "id": "alexscaves:candy_cane_hook", "required": false }
 	]
 }

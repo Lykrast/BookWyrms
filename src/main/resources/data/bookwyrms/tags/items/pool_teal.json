@@ -2,6 +2,9 @@
 	"values": [
 		"minecraft:fishing_rod",
 		"minecraft:trident",
-		{ "id": "the_bumblezone:stinger_spear", "required": false }
+		{ "id": "the_bumblezone:stinger_spear", "required": false },
+		{ "id": "alexscaves:ortholance", "required": false },
+		{ "id": "alexscaves:magic_conch", "required": false },
+		{ "id": "alexscaves:sea_staff", "required": false }
 	]
 }
