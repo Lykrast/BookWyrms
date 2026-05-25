@@ -4,7 +4,11 @@ import lykrast.bookwyrms.BookWyrms;
 import lykrast.bookwyrms.entity.BookWyrmEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
@@ -23,5 +27,10 @@ public class BWEntities {
 	@SubscribeEvent
 	public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
 		event.put(bookWyrm.get(), BookWyrmEntity.createAttributes().build());
+	}
+	
+	@SubscribeEvent
+	public static void registerSpawnPlacements(final SpawnPlacementRegisterEvent event) {
+		event.register(bookWyrm.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules, SpawnPlacementRegisterEvent.Operation.REPLACE);
 	}
 }
